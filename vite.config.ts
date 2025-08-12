@@ -8,7 +8,8 @@ export default defineConfig({
 	plugins: [
 		tailwindcss(),
 		sveltekit(),
-		devtoolsJson(),
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(devtoolsJson as any)(),
 		paraglideVitePlugin({
 			project: './project.inlang',
 			outdir: './src/lib/paraglide'

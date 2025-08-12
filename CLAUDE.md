@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Vision
 
 WalletKit is a comprehensive Ethereum wallet connection library for Svelte applications that provides:
+
 1. **Dual usage modes**: NPM package for Svelte apps AND standalone JavaScript for any HTML page
 2. **No wagmi dependency**: Uses lightweight viem instead for smaller bundle size
 3. **Complete network management**: RPC load balancing, custom networks, multi-chain support
@@ -16,6 +17,7 @@ WalletKit is a comprehensive Ethereum wallet connection library for Svelte appli
 ## Key Technical Decisions
 
 ### Architecture Decisions
+
 - **Svelte stores over Redux/MobX**: Native Svelte stores for better integration and smaller bundle
 - **Viem over Ethers.js**: Modern, TypeScript-first, smaller bundle size
 - **Event-driven architecture**: Enables loose coupling and plugin support
@@ -23,6 +25,7 @@ WalletKit is a comprehensive Ethereum wallet connection library for Svelte appli
 - **Monolithic standalone build**: Zero-configuration usage for non-Svelte apps
 
 ### Design Principles
+
 - **Minimal code, maximum functionality**: Clean architecture with no unnecessary abstractions
 - **Progressive enhancement**: Works in basic mode, enhances with features as needed
 - **Mobile-first**: All features work perfectly on mobile devices
@@ -32,18 +35,21 @@ WalletKit is a comprehensive Ethereum wallet connection library for Svelte appli
 ## Development Commands
 
 ### Core Development
+
 - `pnpm dev` - Start development server with hot reload
 - `pnpm build` - Build the library and prepare for packaging
 - `pnpm preview` - Preview production build locally
 - `pnpm prepack` - Prepare library for npm publication (runs sync, package, and publint)
 
 ### Testing
+
 - `pnpm test` - Run all tests (unit and e2e)
 - `pnpm test:unit` - Run Vitest unit tests in watch mode
 - `pnpm test:unit -- --run` - Run unit tests once
 - `pnpm test:e2e` - Run Playwright end-to-end tests
 
 ### Code Quality
+
 - `pnpm lint` - Check code formatting and run ESLint
 - `pnpm format` - Auto-format code with Prettier
 - `pnpm check` - Run svelte-check for TypeScript errors
@@ -52,6 +58,7 @@ WalletKit is a comprehensive Ethereum wallet connection library for Svelte appli
 ## Project Structure
 
 ### Core Modules Location
+
 - `src/lib/core/` - Core services (WalletManager, NetworkManager, RpcManager)
 - `src/lib/connectors/` - Wallet connector implementations
 - `src/lib/components/` - Svelte UI components
@@ -62,6 +69,7 @@ WalletKit is a comprehensive Ethereum wallet connection library for Svelte appli
 - `src/standalone/` - Standalone JavaScript bundle entry
 
 ### Key Files
+
 - `src/lib/index.ts` - Main library export for NPM package
 - `src/standalone/index.ts` - Entry point for standalone build
 - `messages/*.json` - Translation files for i18n
@@ -70,6 +78,7 @@ WalletKit is a comprehensive Ethereum wallet connection library for Svelte appli
 ## Implementation Phases
 
 Currently planning Phase 1 (MVP):
+
 1. Basic wallet connection (MetaMask)
 2. Network switching
 3. Account management
@@ -81,6 +90,7 @@ Future phases include WalletConnect, multi-wallet support, RPC load balancing, f
 ## Key Implementation Notes
 
 ### State Management (Svelte 5)
+
 - Use Svelte 5 runes (`$state`, `$derived`, `$effect`) for reactive state
 - Prefer runes over stores for new components
 - Use `$state.snapshot()` for immutable state snapshots
@@ -88,6 +98,7 @@ Future phases include WalletConnect, multi-wallet support, RPC load balancing, f
 - Export state objects with rune-based reactivity
 
 ### Component Development (Svelte 5)
+
 - Use Svelte 5 runes syntax (`$props()`, `$state()`, `$effect()`)
 - All components should accept `class` prop for custom styling
 - Use snippets instead of slots for better type safety and performance
@@ -97,29 +108,34 @@ Future phases include WalletConnect, multi-wallet support, RPC load balancing, f
 - Prefer `onclick` over `on:click` (Svelte 5 event syntax)
 
 ### Wallet Connectors
+
 - Each connector implements the `Connector` interface
 - Connectors are lazy-loaded to reduce initial bundle size
 - Support for EIP-6963 (wallet discovery) is required
 
 ### Network Management
+
 - Networks are identified by chainId (number)
 - Support dynamic network addition/removal
 - RPC endpoints support load balancing and health checks
 - Must handle network switching gracefully
 
 ### Internationalization
+
 - Use Paraglide for i18n (already configured)
 - All user-facing text must be translatable
 - Support dynamic locale switching
 - Number/date formatting per locale
 
 ### Testing Requirements
+
 - Unit tests for all utility functions
 - Integration tests for wallet connections
 - E2E tests for critical user flows
 - Mock providers for testing without real wallets
 
 ## Technology Stack
+
 - **Framework**: SvelteKit with Svelte 5
 - **Build**: Vite with TypeScript
 - **Styling**: Tailwind CSS (via @tailwindcss/vite)
@@ -129,11 +145,13 @@ Future phases include WalletConnect, multi-wallet support, RPC load balancing, f
 - **Package Manager**: pnpm
 
 ## Documentation References
+
 - `REQUIREMENTS.md` - Comprehensive feature requirements
 - `ARCHITECTURE.md` - Technical architecture and design patterns
 - `API.md` - Complete API documentation for both NPM and standalone usage
 
 ## Important Constraints
+
 - Must NOT depend on wagmi (use viem directly)
 - Bundle size for core library must be < 50KB gzipped
 - Must support both NPM and standalone usage

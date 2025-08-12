@@ -7,6 +7,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ## 2. Core Objectives
 
 ### 2.1 Primary Goals
+
 - Provide a production-ready wallet connection solution for Svelte applications
 - Support framework-agnostic deployment through standalone JavaScript bundle
 - Enable complete network management with RPC load balancing
@@ -14,6 +15,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Maintain minimal dependencies while providing maximum functionality
 
 ### 2.2 Design Principles
+
 - **Simplicity**: Clean architecture with minimal code complexity
 - **Flexibility**: Support multiple usage patterns and customization options
 - **Performance**: Lightweight bundle size with optimal runtime performance
@@ -26,6 +28,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 3.1 Network Management
 
 #### 3.1.1 Network Configuration
+
 - Support for all Ethereum-compatible networks (mainnet, testnets, L2s, custom networks)
 - Dynamic network addition and removal at runtime
 - Network metadata management (name, chain ID, currency, explorer URLs, icon URLs)
@@ -33,6 +36,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Network validation and health checking
 
 #### 3.1.2 RPC Management
+
 - Multiple RPC endpoint support per network
 - Automatic RPC load balancing with failover
 - RPC health monitoring and automatic switching
@@ -41,6 +45,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - WebSocket support for real-time updates
 
 #### 3.1.3 dApp-Specific Network Filtering
+
 - Allow dApps to specify supported networks per context
 - Dynamic network list based on current application state
 - Support different network requirements for different tools within same site
@@ -52,6 +57,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 #### 3.2.1 Connection Methods
 
 ##### Browser Extension Wallets (Injected)
+
 - MetaMask detection and connection
 - Auto-discovery of all injected wallet providers
 - Support for multiple simultaneous injected wallets
@@ -59,6 +65,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Fallback detection for legacy injection methods
 
 ##### WalletConnect Integration
+
 - WalletConnect v2 protocol support
 - Custom QR code modal implementation
 - Deep linking support for mobile wallets
@@ -66,17 +73,20 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Multi-chain session management
 
 ##### Smart Contract Wallets
+
 - Coinbase Smart Wallet integration
 - Safe (Gnosis Safe) wallet support
 - Account abstraction (ERC-4337) compatibility
 - Social recovery wallet support
 
 ##### Hardware Wallets
+
 - Ledger wallet integration via WebHID/WebUSB
 - Support for Ledger Live connection
 - Transaction signing with hardware confirmation
 
 #### 3.2.2 Connection Management
+
 - Persistent connection state across page reloads
 - Automatic reconnection on page load
 - Connection timeout handling
@@ -86,6 +96,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Connection history tracking
 
 #### 3.2.3 Connector Architecture
+
 - Abstract connector interface for all wallet types
 - Lifecycle management (connect, disconnect, reconnect)
 - Event-driven architecture for state changes
@@ -95,6 +106,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 3.3 Authentication & Authorization
 
 #### 3.3.1 Sign-In with Ethereum (SIWE)
+
 - EIP-4361 compliant implementation
 - Nonce generation and validation
 - Session management with configurable expiration
@@ -102,6 +114,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Domain binding verification
 
 #### 3.3.2 Session Management
+
 - Secure session storage (encrypted local storage)
 - Session refresh mechanisms
 - Multi-tab session synchronization
@@ -111,6 +124,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 3.4 Subscription System
 
 #### 3.4.1 Smart Contract Integration
+
 - Generic subscription contract interface
 - Subscription status checking
 - Payment processing support
@@ -118,6 +132,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Automatic renewal handling
 
 #### 3.4.2 Subscription Features
+
 - Trial period support
 - Grace period handling
 - Payment method management
@@ -127,6 +142,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 3.5 User Interface Components
 
 #### 3.5.1 Connect Button
+
 - Customizable button with wallet status
 - Dropdown with connected account details
 - ENS name and avatar resolution
@@ -134,6 +150,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Network indicator with switching capability
 
 #### 3.5.2 Modal System
+
 - Wallet selection modal
 - Network switching modal
 - Account details modal
@@ -141,6 +158,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Error and success notifications
 
 #### 3.5.3 Widget Mode (Framework-Agnostic)
+
 - Floating action button (FAB) positioning
 - Edge-docked panel (like g123.jp)
 - Expandable/collapsible interface
@@ -151,6 +169,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 3.6 Transaction Management
 
 #### 3.6.1 Transaction Building
+
 - Gas estimation with user adjustments
 - EIP-1559 transaction support
 - Legacy transaction fallback
@@ -158,6 +177,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Transaction simulation before sending
 
 #### 3.6.2 Transaction Monitoring
+
 - Real-time transaction status updates
 - Transaction history with filtering
 - Transaction receipt storage
@@ -169,12 +189,14 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 4.1 Performance
 
 #### 4.1.1 Bundle Size
+
 - Core library < 50KB gzipped
 - Lazy loading for optional features
 - Tree-shaking support
 - Code splitting for large components
 
 #### 4.1.2 Runtime Performance
+
 - Initial connection < 2 seconds
 - Network switching < 1 second
 - UI interactions < 100ms response time
@@ -183,6 +205,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 4.2 Internationalization (i18n)
 
 #### 4.2.1 Language Support
+
 - Built-in English and Chinese translations
 - Pluggable translation system for additional languages
 - Runtime language switching
@@ -191,6 +214,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - RTL language support preparation
 
 #### 4.2.2 Translation Management
+
 - JSON-based translation files
 - Placeholder support for dynamic content
 - Pluralization rules per language
@@ -199,12 +223,14 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 4.3 Theming System
 
 #### 4.3.1 Built-in Themes
+
 - Light theme with professional appearance
 - Dark theme with reduced eye strain
 - Auto theme based on system preference
 - High contrast theme for accessibility
 
 #### 4.3.2 Theme Customization
+
 - CSS custom properties for all colors
 - Typography system with configurable fonts
 - Spacing and sizing scales
@@ -212,6 +238,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Animation timing customization
 
 #### 4.3.3 Brand Integration
+
 - Custom color palette support
 - Logo and icon replacement
 - Custom font loading
@@ -221,6 +248,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 4.4 Accessibility
 
 #### 4.4.1 Standards Compliance
+
 - WCAG 2.1 Level AA compliance
 - Semantic HTML structure
 - ARIA attributes for screen readers
@@ -228,6 +256,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Focus management and indicators
 
 #### 4.4.2 User Preferences
+
 - Reduced motion support
 - High contrast mode
 - Font size adjustments
@@ -236,6 +265,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 4.5 Security
 
 #### 4.5.1 Data Protection
+
 - No storage of private keys
 - Encrypted session data
 - Secure communication protocols
@@ -243,6 +273,7 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 - Content Security Policy compliance
 
 #### 4.5.2 Validation
+
 - Input sanitization
 - Address validation
 - Network parameter verification
@@ -254,17 +285,20 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 5.1 Dependencies
 
 #### 5.1.1 Core Dependencies
+
 - viem: Ethereum interaction layer
 - @walletconnect/client: WalletConnect protocol
 - Svelte 5: UI framework (peer dependency)
 
 #### 5.1.2 Development Dependencies
+
 - TypeScript: Type safety
 - Vite: Build tooling
 - Vitest: Unit testing
 - Playwright: E2E testing
 
 ### 5.2 Browser Support
+
 - Chrome/Edge 90+
 - Firefox 88+
 - Safari 14+
@@ -274,12 +308,14 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 5.3 Package Distribution
 
 #### 5.3.1 NPM Package
+
 - ESM and CJS builds
 - TypeScript definitions
 - Source maps for debugging
 - Svelte component exports
 
 #### 5.3.2 Standalone JavaScript Bundle
+
 - UMD build for script tag inclusion
 - Self-contained with all dependencies
 - Automatic initialization option
@@ -288,16 +324,13 @@ WalletKit is a comprehensive Svelte library for Ethereum dApp wallet connectivit
 ### 5.4 API Design
 
 #### 5.4.1 Svelte Component API
+
 ```svelte
-<WalletKit
-  networks={[mainnet, polygon]}
-  theme="dark"
-  locale="en"
-  position="bottom-right"
-/>
+<WalletKit networks={[mainnet, polygon]} theme="dark" locale="en" position="bottom-right" />
 ```
 
 #### 5.4.2 JavaScript API
+
 ```javascript
 window.WalletKit.init({
   networks: [...],
@@ -313,6 +346,7 @@ window.WalletKit.connect();
 ## 6. Usage Scenarios
 
 ### 6.1 NPM Package Usage
+
 - Install via `npm install walletkit`
 - Import Svelte components directly
 - Full TypeScript support
@@ -320,6 +354,7 @@ window.WalletKit.connect();
 - Server-side rendering compatibility
 
 ### 6.2 Standalone Script Usage
+
 - Include single JavaScript file
 - Automatic widget injection
 - Cross-frame communication support
@@ -327,6 +362,7 @@ window.WalletKit.connect();
 - No build step required
 
 ### 6.3 Hybrid Usage
+
 - NPM package with standalone features
 - Progressive enhancement approach
 - Graceful degradation for older browsers
@@ -334,6 +370,7 @@ window.WalletKit.connect();
 ## 7. Mobile Considerations
 
 ### 7.1 Responsive Design
+
 - Mobile-first approach
 - Touch-optimized interactions
 - Appropriate tap target sizes
@@ -341,12 +378,14 @@ window.WalletKit.connect();
 - Viewport management
 
 ### 7.2 Mobile Wallet Support
+
 - Deep linking to mobile wallets
 - In-app browser detection
 - WalletConnect for mobile connections
 - QR code scanning optimization
 
 ### 7.3 Performance Optimization
+
 - Reduced animations on low-end devices
 - Lazy loading of non-critical resources
 - Optimized images and icons
@@ -355,12 +394,14 @@ window.WalletKit.connect();
 ## 8. Development Workflow
 
 ### 8.1 Component Development
+
 - Storybook for component isolation
 - Visual regression testing
 - Component documentation
 - Design system integration
 
 ### 8.2 Testing Strategy
+
 - Unit tests for logic
 - Integration tests for wallet connections
 - E2E tests for user flows
@@ -368,6 +409,7 @@ window.WalletKit.connect();
 - Security auditing
 
 ### 8.3 Documentation
+
 - Comprehensive API documentation
 - Integration guides
 - Example applications
@@ -377,6 +419,7 @@ window.WalletKit.connect();
 ## 9. Future Considerations
 
 ### 9.1 Potential Enhancements
+
 - Support for non-EVM chains
 - Multi-chain simultaneous connections
 - Advanced DeFi integrations
@@ -384,6 +427,7 @@ window.WalletKit.connect();
 - DAO voting interfaces
 
 ### 9.2 Ecosystem Integration
+
 - Plugin system for third-party extensions
 - Marketplace for custom themes
 - Community-contributed connectors
@@ -392,18 +436,21 @@ window.WalletKit.connect();
 ## 10. Success Metrics
 
 ### 10.1 Technical Metrics
+
 - Bundle size under target
 - Connection success rate > 95%
 - Page load impact < 100ms
 - Zero runtime errors in production
 
 ### 10.2 User Experience Metrics
+
 - Time to first connection < 10 seconds
 - Successful connection on first attempt > 80%
 - User satisfaction score > 4.5/5
 - Mobile usage > 40%
 
 ### 10.3 Adoption Metrics
+
 - NPM weekly downloads
 - GitHub stars and forks
 - Active integrations
@@ -414,21 +461,25 @@ window.WalletKit.connect();
 ### 11.1 Comparison with Existing Solutions
 
 #### RainbowKit
+
 - Strengths: Polished UI, extensive wallet support
 - Limitations: React-only, wagmi dependency, large bundle size
 - WalletKit advantage: Svelte-native, lighter weight, framework-agnostic option
 
 #### ConnectKit
+
 - Strengths: Good DX, customization options
 - Limitations: React-specific, limited theme options
 - WalletKit advantage: Better theming system, dual usage modes
 
 #### Web3Modal
+
 - Strengths: Official WalletConnect solution, multi-framework
 - Limitations: Less customizable, opinionated design
 - WalletKit advantage: Full customization, better Svelte integration
 
 ### 11.2 Unique Selling Points
+
 - Only production-ready Svelte wallet solution
 - Dual usage modes (NPM and standalone)
 - Superior theming and customization
@@ -438,6 +489,7 @@ window.WalletKit.connect();
 ## 12. Implementation Priorities
 
 ### 12.1 Phase 1: Core Functionality (MVP)
+
 1. Basic wallet connection (MetaMask)
 2. Network switching
 3. Account management
@@ -445,6 +497,7 @@ window.WalletKit.connect();
 5. Light/dark theme
 
 ### 12.2 Phase 2: Enhanced Features
+
 1. WalletConnect integration
 2. Multiple wallet support
 3. RPC load balancing
@@ -452,6 +505,7 @@ window.WalletKit.connect();
 5. Advanced theming
 
 ### 12.3 Phase 3: Advanced Capabilities
+
 1. Standalone JavaScript bundle
 2. Widget mode
 3. SIWE authentication
@@ -459,6 +513,7 @@ window.WalletKit.connect();
 5. Hardware wallet support
 
 ### 12.4 Phase 4: Polish & Scale
+
 1. Performance optimization
 2. Comprehensive testing
 3. Documentation completion
@@ -468,12 +523,14 @@ window.WalletKit.connect();
 ## 13. Risk Assessment
 
 ### 13.1 Technical Risks
+
 - Browser API limitations for hardware wallets
 - WalletConnect protocol changes
 - Ethereum protocol updates
 - Performance on low-end devices
 
 ### 13.2 Mitigation Strategies
+
 - Abstraction layers for external dependencies
 - Comprehensive error handling
 - Feature detection and progressive enhancement

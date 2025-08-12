@@ -3,45 +3,45 @@
  * A standalone Web3 account center that can be integrated with one line of code
  */
 
-(function() {
-  'use strict';
-  
-  // Prevent multiple initializations
-  if (window.WalletKitWidget) {
-    console.warn('WalletKit Widget is already initialized');
-    return;
-  }
-  
-  // Widget configuration from script tag attributes
-  const scriptTag = document.currentScript;
-  const config = {
-    position: scriptTag?.getAttribute('data-position') || 'bottom-right',
-    theme: scriptTag?.getAttribute('data-theme') || 'light',
-    subscriptionContract: scriptTag?.getAttribute('data-subscription-contract'),
-    subscriptionNetwork: scriptTag?.getAttribute('data-subscription-network') || '1',
-  };
-  
-  // Widget state
-  const state = {
-    isOpen: false,
-    isConnected: false,
-    account: null,
-    subscription: {
-      isActive: false,
-      plan: null,
-      expiresAt: null
-    },
-    position: {
-      x: 0,
-      y: 0,
-      side: 'right' // 'left' or 'right'
-    },
-    isDragging: false
-  };
-  
-  // Create widget HTML structure
-  function createWidgetHTML() {
-    const widgetHTML = `
+(function () {
+	'use strict';
+
+	// Prevent multiple initializations
+	if (window.WalletKitWidget) {
+		console.warn('WalletKit Widget is already initialized');
+		return;
+	}
+
+	// Widget configuration from script tag attributes
+	const scriptTag = document.currentScript;
+	const config = {
+		position: scriptTag?.getAttribute('data-position') || 'bottom-right',
+		theme: scriptTag?.getAttribute('data-theme') || 'light',
+		subscriptionContract: scriptTag?.getAttribute('data-subscription-contract'),
+		subscriptionNetwork: scriptTag?.getAttribute('data-subscription-network') || '1'
+	};
+
+	// Widget state
+	const state = {
+		isOpen: false,
+		isConnected: false,
+		account: null,
+		subscription: {
+			isActive: false,
+			plan: null,
+			expiresAt: null
+		},
+		position: {
+			x: 0,
+			y: 0,
+			side: 'right' // 'left' or 'right'
+		},
+		isDragging: false
+	};
+
+	// Create widget HTML structure
+	function createWidgetHTML() {
+		const widgetHTML = `
       <div id="walletkit-widget-root">
         <!-- Floating Assistant -->
         <div class="wk-floating-assistant" id="wk-assistant">
@@ -155,16 +155,16 @@
         </div>
       </div>
     `;
-    
-    // Create container and add to DOM
-    const container = document.createElement('div');
-    container.innerHTML = widgetHTML;
-    document.body.appendChild(container.firstElementChild);
-  }
-  
-  // Create and inject styles
-  function injectStyles() {
-    const styles = `
+
+		// Create container and add to DOM
+		const container = document.createElement('div');
+		container.innerHTML = widgetHTML;
+		document.body.appendChild(container.firstElementChild);
+	}
+
+	// Create and inject styles
+	function injectStyles() {
+		const styles = `
       #walletkit-widget-root {
         position: fixed;
         right: 20px;
@@ -574,415 +574,422 @@
         }
       }
     `;
-    
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = styles;
-    document.head.appendChild(styleSheet);
-  }
-  
-  // Initialize widget functionality
-  function initializeWidget() {
-    const widgetRoot = document.getElementById('walletkit-widget-root');
-    const assistant = document.getElementById('wk-assistant');
-    const panel = document.getElementById('wk-panel');
-    const closeBtn = document.getElementById('wk-close');
-    const connectBtn = document.getElementById('wk-connect-btn');
-    const disconnectBtn = document.getElementById('wk-disconnect-btn');
-    const subscribeBtn = document.getElementById('wk-subscribe-btn');
-    const plansModal = document.getElementById('wk-plans-modal');
-    
-    // Initialize drag functionality
-    initializeDragging(widgetRoot, assistant, panel);
-    
-    // Toggle panel - only on click, not drag
-    let isDragClick = false;
-    assistant.addEventListener('mousedown', () => {
-      isDragClick = true;
-    });
-    
-    assistant.addEventListener('click', (e) => {
-      // Only toggle panel if it was a click, not a drag
-      if (isDragClick && !state.isDragging) {
-        state.isOpen = !state.isOpen;
-        panel.style.display = state.isOpen ? 'flex' : 'none';
-        
-        if (state.isOpen) {
-          emitEvent('panel:opened');
-        } else {
-          emitEvent('panel:closed');
-        }
-      }
-      isDragClick = false;
-    });
-    
-    // Close panel
-    closeBtn.addEventListener('click', () => {
-      state.isOpen = false;
-      panel.style.display = 'none';
-      emitEvent('panel:closed');
-    });
-    
-    // Connect wallet
-    connectBtn.addEventListener('click', async () => {
-      // Simulate wallet connection
-      state.isConnected = true;
-      state.account = '0x' + Math.random().toString(16).substr(2, 40);
-      
-      updateConnectionUI();
-      emitEvent('connected', { address: state.account });
-    });
-    
-    // Disconnect wallet
-    disconnectBtn.addEventListener('click', () => {
-      state.isConnected = false;
-      state.account = null;
-      
-      updateConnectionUI();
-      emitEvent('disconnected');
-    });
-    
-    // Show subscription plans
-    subscribeBtn.addEventListener('click', () => {
-      plansModal.style.display = 'block';
-    });
-    
-    // Handle plan selection
-    document.querySelectorAll('.wk-plan-select').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const planId = e.target.getAttribute('data-plan');
-        handleSubscription(planId);
-      });
-    });
-  }
-  
-  // Update UI based on connection state
-  function updateConnectionUI() {
-    const notConnected = document.getElementById('wk-not-connected');
-    const connected = document.getElementById('wk-connected');
-    const networkSection = document.getElementById('wk-network-section');
-    const statusIndicator = document.querySelector('.wk-status-indicator');
-    
-    if (state.isConnected) {
-      notConnected.style.display = 'none';
-      connected.style.display = 'block';
-      networkSection.style.display = 'block';
-      statusIndicator.style.background = '#10b981';
-      
-      // Update account display
-      const addressEl = document.getElementById('wk-account-address');
-      addressEl.textContent = state.account.substring(0, 6) + '...' + state.account.substring(state.account.length - 4);
-    } else {
-      notConnected.style.display = 'block';
-      connected.style.display = 'none';
-      networkSection.style.display = 'none';
-      statusIndicator.style.background = '#ef4444';
-    }
-  }
-  
-  // Handle subscription
-  function handleSubscription(planId) {
-    if (!state.isConnected) {
-      alert('Please connect your wallet first');
-      return;
-    }
-    
-    // Simulate subscription purchase
-    state.subscription = {
-      isActive: true,
-      plan: planId === '1' ? 'Basic' : 'Pro',
-      expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000 // 30 days
-    };
-    
-    updateSubscriptionUI();
-    emitEvent('subscriptionChanged', {
-      status: 'active',
-      isActive: true,
-      plan: state.subscription.plan
-    });
-    
-    // Hide plans modal
-    document.getElementById('wk-plans-modal').style.display = 'none';
-  }
-  
-  // Update subscription UI
-  function updateSubscriptionUI() {
-    const noSub = document.getElementById('wk-no-subscription');
-    const activeSub = document.getElementById('wk-active-subscription');
-    
-    if (state.subscription.isActive) {
-      noSub.style.display = 'none';
-      activeSub.style.display = 'block';
-      
-      const expiresEl = document.getElementById('wk-subscription-expires');
-      expiresEl.textContent = new Date(state.subscription.expiresAt).toLocaleDateString();
-    } else {
-      noSub.style.display = 'block';
-      activeSub.style.display = 'none';
-    }
-  }
-  
-  // Dragging functionality
-  function initializeDragging(widgetRoot, assistant, panel) {
-    let dragStartX = 0;
-    let dragStartY = 0;
-    let startX = 0;
-    let startY = 0;
-    let hasMoved = false;
-    
-    function handleMouseDown(e) {
-      // Prevent dragging when panel is open
-      if (state.isOpen) return;
-      
-      dragStartX = e.clientX;
-      dragStartY = e.clientY;
-      
-      // Get current position
-      const rect = widgetRoot.getBoundingClientRect();
-      startX = rect.left;
-      startY = rect.top;
-      
-      hasMoved = false;
-      
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      
-      // Prevent text selection
-      e.preventDefault();
-    }
-    
-    function handleMouseMove(e) {
-      if (!hasMoved && (Math.abs(e.clientX - dragStartX) > 5 || Math.abs(e.clientY - dragStartY) > 5)) {
-        hasMoved = true;
-        state.isDragging = true;
-        widgetRoot.classList.add('wk-dragging');
-        assistant.classList.add('wk-dragging');
-      }
-      
-      if (hasMoved) {
-        const deltaX = e.clientX - dragStartX;
-        const deltaY = e.clientY - dragStartY;
-        
-        const newX = startX + deltaX;
-        const newY = startY + deltaY;
-        
-        // Apply position directly during drag
-        widgetRoot.style.left = newX + 'px';
-        widgetRoot.style.top = newY + 'px';
-        widgetRoot.style.right = 'auto';
-        widgetRoot.style.transform = 'none';
-      }
-    }
-    
-    function handleMouseUp(e) {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      
-      if (hasMoved) {
-        // Snap to edge
-        snapToEdge(widgetRoot, panel);
-        
-        setTimeout(() => {
-          state.isDragging = false;
-          widgetRoot.classList.remove('wk-dragging');
-          assistant.classList.remove('wk-dragging');
-        }, 50);
-      }
-    }
-    
-    // Touch support for mobile
-    function handleTouchStart(e) {
-      if (state.isOpen) return;
-      
-      const touch = e.touches[0];
-      dragStartX = touch.clientX;
-      dragStartY = touch.clientY;
-      
-      const rect = widgetRoot.getBoundingClientRect();
-      startX = rect.left;
-      startY = rect.top;
-      
-      hasMoved = false;
-    }
-    
-    function handleTouchMove(e) {
-      const touch = e.touches[0];
-      
-      if (!hasMoved && (Math.abs(touch.clientX - dragStartX) > 5 || Math.abs(touch.clientY - dragStartY) > 5)) {
-        hasMoved = true;
-        state.isDragging = true;
-        widgetRoot.classList.add('wk-dragging');
-        assistant.classList.add('wk-dragging');
-        e.preventDefault(); // Prevent scrolling
-      }
-      
-      if (hasMoved) {
-        const deltaX = touch.clientX - dragStartX;
-        const deltaY = touch.clientY - dragStartY;
-        
-        const newX = startX + deltaX;
-        const newY = startY + deltaY;
-        
-        widgetRoot.style.left = newX + 'px';
-        widgetRoot.style.top = newY + 'px';
-        widgetRoot.style.right = 'auto';
-        widgetRoot.style.transform = 'none';
-      }
-    }
-    
-    function handleTouchEnd(e) {
-      if (hasMoved) {
-        snapToEdge(widgetRoot, panel);
-        
-        setTimeout(() => {
-          state.isDragging = false;
-          widgetRoot.classList.remove('wk-dragging');
-          assistant.classList.remove('wk-dragging');
-        }, 50);
-      }
-    }
-    
-    assistant.addEventListener('mousedown', handleMouseDown);
-    assistant.addEventListener('touchstart', handleTouchStart, { passive: false });
-    assistant.addEventListener('touchmove', handleTouchMove, { passive: false });
-    assistant.addEventListener('touchend', handleTouchEnd);
-  }
-  
-  // Snap to edge function
-  function snapToEdge(widgetRoot, panel) {
-    const rect = widgetRoot.getBoundingClientRect();
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    
-    // Calculate center position
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    // Determine which edge is closer (left or right)
-    const distanceToLeft = centerX;
-    const distanceToRight = windowWidth - centerX;
-    
-    // Add snapping animation class
-    widgetRoot.classList.add('wk-snapping');
-    
-    // Constrain Y position to keep widget on screen
-    let finalY = centerY;
-    const minY = rect.height / 2 + 20;
-    const maxY = windowHeight - rect.height / 2 - 20;
-    finalY = Math.max(minY, Math.min(maxY, finalY));
-    
-    if (distanceToLeft < distanceToRight) {
-      // Snap to left edge
-      state.position.side = 'left';
-      widgetRoot.style.left = '20px';
-      widgetRoot.style.right = 'auto';
-      panel.classList.remove('wk-panel-right');
-      panel.classList.add('wk-panel-left');
-    } else {
-      // Snap to right edge
-      state.position.side = 'right';
-      widgetRoot.style.right = '20px';
-      widgetRoot.style.left = 'auto';
-      panel.classList.remove('wk-panel-left');
-      panel.classList.add('wk-panel-right');
-    }
-    
-    // Set vertical position
-    widgetRoot.style.top = finalY + 'px';
-    widgetRoot.style.transform = 'translateY(-50%)';
-    
-    // Store position
-    state.position.x = state.position.side === 'left' ? 20 : windowWidth - rect.width - 20;
-    state.position.y = finalY;
-    
-    // Remove snapping animation class after animation completes
-    setTimeout(() => {
-      widgetRoot.classList.remove('wk-snapping');
-    }, 300);
-  }
-  
-  // Event system
-  const eventHandlers = {};
-  
-  function emitEvent(eventName, data) {
-    // Internal handlers
-    if (eventHandlers[eventName]) {
-      eventHandlers[eventName].forEach(handler => handler(data));
-    }
-    
-    // Dispatch custom event for external listeners
-    window.dispatchEvent(new CustomEvent(`walletkit:${eventName}`, { detail: data }));
-  }
-  
-  // Public API
-  window.WalletKitWidget = {
-    // State queries
-    isConnected: () => state.isConnected,
-    getAccount: () => state.account,
-    checkSubscription: (callback) => {
-      callback(state.subscription);
-    },
-    
-    // Actions
-    promptConnect: () => {
-      if (!state.isConnected) {
-        state.isOpen = true;
-        document.getElementById('wk-panel').style.display = 'flex';
-      }
-    },
-    
-    requireSubscription: (callback) => {
-      if (!state.subscription.isActive) {
-        state.isOpen = true;
-        document.getElementById('wk-panel').style.display = 'flex';
-        document.getElementById('wk-plans-modal').style.display = 'block';
-        callback(false);
-      } else {
-        callback(true);
-      }
-    },
-    
-    // Event handling
-    on: (eventName, handler) => {
-      if (!eventHandlers[eventName]) {
-        eventHandlers[eventName] = [];
-      }
-      eventHandlers[eventName].push(handler);
-      
-      // Return unsubscribe function
-      return () => {
-        const index = eventHandlers[eventName].indexOf(handler);
-        if (index > -1) {
-          eventHandlers[eventName].splice(index, 1);
-        }
-      };
-    },
-    
-    // Utility
-    show: () => {
-      document.getElementById('walletkit-widget-root').style.display = 'block';
-    },
-    
-    hide: () => {
-      document.getElementById('walletkit-widget-root').style.display = 'none';
-    },
-    
-    destroy: () => {
-      document.getElementById('walletkit-widget-root').remove();
-    }
-  };
-  
-  // Initialize on DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      createWidgetHTML();
-      injectStyles();
-      initializeWidget();
-      emitEvent('ready');
-    });
-  } else {
-    createWidgetHTML();
-    injectStyles();
-    initializeWidget();
-    emitEvent('ready');
-  }
+
+		const styleSheet = document.createElement('style');
+		styleSheet.textContent = styles;
+		document.head.appendChild(styleSheet);
+	}
+
+	// Initialize widget functionality
+	function initializeWidget() {
+		const widgetRoot = document.getElementById('walletkit-widget-root');
+		const assistant = document.getElementById('wk-assistant');
+		const panel = document.getElementById('wk-panel');
+		const closeBtn = document.getElementById('wk-close');
+		const connectBtn = document.getElementById('wk-connect-btn');
+		const disconnectBtn = document.getElementById('wk-disconnect-btn');
+		const subscribeBtn = document.getElementById('wk-subscribe-btn');
+		const plansModal = document.getElementById('wk-plans-modal');
+
+		// Initialize drag functionality
+		initializeDragging(widgetRoot, assistant, panel);
+
+		// Toggle panel - only on click, not drag
+		let isDragClick = false;
+		assistant.addEventListener('mousedown', () => {
+			isDragClick = true;
+		});
+
+		assistant.addEventListener('click', () => {
+			// Only toggle panel if it was a click, not a drag
+			if (isDragClick && !state.isDragging) {
+				state.isOpen = !state.isOpen;
+				panel.style.display = state.isOpen ? 'flex' : 'none';
+
+				if (state.isOpen) {
+					emitEvent('panel:opened');
+				} else {
+					emitEvent('panel:closed');
+				}
+			}
+			isDragClick = false;
+		});
+
+		// Close panel
+		closeBtn.addEventListener('click', () => {
+			state.isOpen = false;
+			panel.style.display = 'none';
+			emitEvent('panel:closed');
+		});
+
+		// Connect wallet
+		connectBtn.addEventListener('click', async () => {
+			// Simulate wallet connection
+			state.isConnected = true;
+			state.account = '0x' + Math.random().toString(16).substring(2, 42);
+
+			updateConnectionUI();
+			emitEvent('connected', { address: state.account });
+		});
+
+		// Disconnect wallet
+		disconnectBtn.addEventListener('click', () => {
+			state.isConnected = false;
+			state.account = null;
+
+			updateConnectionUI();
+			emitEvent('disconnected');
+		});
+
+		// Show subscription plans
+		subscribeBtn.addEventListener('click', () => {
+			plansModal.style.display = 'block';
+		});
+
+		// Handle plan selection
+		document.querySelectorAll('.wk-plan-select').forEach((btn) => {
+			btn.addEventListener('click', (e) => {
+				const planId = e.target.getAttribute('data-plan');
+				handleSubscription(planId);
+			});
+		});
+	}
+
+	// Update UI based on connection state
+	function updateConnectionUI() {
+		const notConnected = document.getElementById('wk-not-connected');
+		const connected = document.getElementById('wk-connected');
+		const networkSection = document.getElementById('wk-network-section');
+		const statusIndicator = document.querySelector('.wk-status-indicator');
+
+		if (state.isConnected) {
+			notConnected.style.display = 'none';
+			connected.style.display = 'block';
+			networkSection.style.display = 'block';
+			statusIndicator.style.background = '#10b981';
+
+			// Update account display
+			const addressEl = document.getElementById('wk-account-address');
+			addressEl.textContent =
+				state.account.substring(0, 6) + '...' + state.account.substring(state.account.length - 4);
+		} else {
+			notConnected.style.display = 'block';
+			connected.style.display = 'none';
+			networkSection.style.display = 'none';
+			statusIndicator.style.background = '#ef4444';
+		}
+	}
+
+	// Handle subscription
+	function handleSubscription(planId) {
+		if (!state.isConnected) {
+			alert('Please connect your wallet first');
+			return;
+		}
+
+		// Simulate subscription purchase
+		state.subscription = {
+			isActive: true,
+			plan: planId === '1' ? 'Basic' : 'Pro',
+			expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000 // 30 days
+		};
+
+		updateSubscriptionUI();
+		emitEvent('subscriptionChanged', {
+			status: 'active',
+			isActive: true,
+			plan: state.subscription.plan
+		});
+
+		// Hide plans modal
+		document.getElementById('wk-plans-modal').style.display = 'none';
+	}
+
+	// Update subscription UI
+	function updateSubscriptionUI() {
+		const noSub = document.getElementById('wk-no-subscription');
+		const activeSub = document.getElementById('wk-active-subscription');
+
+		if (state.subscription.isActive) {
+			noSub.style.display = 'none';
+			activeSub.style.display = 'block';
+
+			const expiresEl = document.getElementById('wk-subscription-expires');
+			expiresEl.textContent = new Date(state.subscription.expiresAt).toLocaleDateString();
+		} else {
+			noSub.style.display = 'block';
+			activeSub.style.display = 'none';
+		}
+	}
+
+	// Dragging functionality
+	function initializeDragging(widgetRoot, assistant, panel) {
+		let dragStartX = 0;
+		let dragStartY = 0;
+		let startX = 0;
+		let startY = 0;
+		let hasMoved = false;
+
+		function handleMouseDown(e) {
+			// Prevent dragging when panel is open
+			if (state.isOpen) return;
+
+			dragStartX = e.clientX;
+			dragStartY = e.clientY;
+
+			// Get current position
+			const rect = widgetRoot.getBoundingClientRect();
+			startX = rect.left;
+			startY = rect.top;
+
+			hasMoved = false;
+
+			document.addEventListener('mousemove', handleMouseMove);
+			document.addEventListener('mouseup', handleMouseUp);
+
+			// Prevent text selection
+			e.preventDefault();
+		}
+
+		function handleMouseMove(e) {
+			if (
+				!hasMoved &&
+				(Math.abs(e.clientX - dragStartX) > 5 || Math.abs(e.clientY - dragStartY) > 5)
+			) {
+				hasMoved = true;
+				state.isDragging = true;
+				widgetRoot.classList.add('wk-dragging');
+				assistant.classList.add('wk-dragging');
+			}
+
+			if (hasMoved) {
+				const deltaX = e.clientX - dragStartX;
+				const deltaY = e.clientY - dragStartY;
+
+				const newX = startX + deltaX;
+				const newY = startY + deltaY;
+
+				// Apply position directly during drag
+				widgetRoot.style.left = newX + 'px';
+				widgetRoot.style.top = newY + 'px';
+				widgetRoot.style.right = 'auto';
+				widgetRoot.style.transform = 'none';
+			}
+		}
+
+		function handleMouseUp() {
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
+
+			if (hasMoved) {
+				// Snap to edge
+				snapToEdge(widgetRoot, panel);
+
+				setTimeout(() => {
+					state.isDragging = false;
+					widgetRoot.classList.remove('wk-dragging');
+					assistant.classList.remove('wk-dragging');
+				}, 50);
+			}
+		}
+
+		// Touch support for mobile
+		function handleTouchStart(e) {
+			if (state.isOpen) return;
+
+			const touch = e.touches[0];
+			dragStartX = touch.clientX;
+			dragStartY = touch.clientY;
+
+			const rect = widgetRoot.getBoundingClientRect();
+			startX = rect.left;
+			startY = rect.top;
+
+			hasMoved = false;
+		}
+
+		function handleTouchMove(e) {
+			const touch = e.touches[0];
+
+			if (
+				!hasMoved &&
+				(Math.abs(touch.clientX - dragStartX) > 5 || Math.abs(touch.clientY - dragStartY) > 5)
+			) {
+				hasMoved = true;
+				state.isDragging = true;
+				widgetRoot.classList.add('wk-dragging');
+				assistant.classList.add('wk-dragging');
+				e.preventDefault(); // Prevent scrolling
+			}
+
+			if (hasMoved) {
+				const deltaX = touch.clientX - dragStartX;
+				const deltaY = touch.clientY - dragStartY;
+
+				const newX = startX + deltaX;
+				const newY = startY + deltaY;
+
+				widgetRoot.style.left = newX + 'px';
+				widgetRoot.style.top = newY + 'px';
+				widgetRoot.style.right = 'auto';
+				widgetRoot.style.transform = 'none';
+			}
+		}
+
+		function handleTouchEnd() {
+			if (hasMoved) {
+				snapToEdge(widgetRoot, panel);
+
+				setTimeout(() => {
+					state.isDragging = false;
+					widgetRoot.classList.remove('wk-dragging');
+					assistant.classList.remove('wk-dragging');
+				}, 50);
+			}
+		}
+
+		assistant.addEventListener('mousedown', handleMouseDown);
+		assistant.addEventListener('touchstart', handleTouchStart, { passive: false });
+		assistant.addEventListener('touchmove', handleTouchMove, { passive: false });
+		assistant.addEventListener('touchend', handleTouchEnd);
+	}
+
+	// Snap to edge function
+	function snapToEdge(widgetRoot, panel) {
+		const rect = widgetRoot.getBoundingClientRect();
+		const windowWidth = window.innerWidth;
+		const windowHeight = window.innerHeight;
+
+		// Calculate center position
+		const centerX = rect.left + rect.width / 2;
+		const centerY = rect.top + rect.height / 2;
+
+		// Determine which edge is closer (left or right)
+		const distanceToLeft = centerX;
+		const distanceToRight = windowWidth - centerX;
+
+		// Add snapping animation class
+		widgetRoot.classList.add('wk-snapping');
+
+		// Constrain Y position to keep widget on screen
+		let finalY = centerY;
+		const minY = rect.height / 2 + 20;
+		const maxY = windowHeight - rect.height / 2 - 20;
+		finalY = Math.max(minY, Math.min(maxY, finalY));
+
+		if (distanceToLeft < distanceToRight) {
+			// Snap to left edge
+			state.position.side = 'left';
+			widgetRoot.style.left = '20px';
+			widgetRoot.style.right = 'auto';
+			panel.classList.remove('wk-panel-right');
+			panel.classList.add('wk-panel-left');
+		} else {
+			// Snap to right edge
+			state.position.side = 'right';
+			widgetRoot.style.right = '20px';
+			widgetRoot.style.left = 'auto';
+			panel.classList.remove('wk-panel-left');
+			panel.classList.add('wk-panel-right');
+		}
+
+		// Set vertical position
+		widgetRoot.style.top = finalY + 'px';
+		widgetRoot.style.transform = 'translateY(-50%)';
+
+		// Store position
+		state.position.x = state.position.side === 'left' ? 20 : windowWidth - rect.width - 20;
+		state.position.y = finalY;
+
+		// Remove snapping animation class after animation completes
+		setTimeout(() => {
+			widgetRoot.classList.remove('wk-snapping');
+		}, 300);
+	}
+
+	// Event system
+	const eventHandlers = {};
+
+	function emitEvent(eventName, data) {
+		// Internal handlers
+		if (eventHandlers[eventName]) {
+			eventHandlers[eventName].forEach((handler) => handler(data));
+		}
+
+		// Dispatch custom event for external listeners
+		window.dispatchEvent(new CustomEvent(`walletkit:${eventName}`, { detail: data }));
+	}
+
+	// Public API
+	window.WalletKitWidget = {
+		// State queries
+		isConnected: () => state.isConnected,
+		getAccount: () => state.account,
+		checkSubscription: (callback) => {
+			callback(state.subscription);
+		},
+
+		// Actions
+		promptConnect: () => {
+			if (!state.isConnected) {
+				state.isOpen = true;
+				document.getElementById('wk-panel').style.display = 'flex';
+			}
+		},
+
+		requireSubscription: (callback) => {
+			if (!state.subscription.isActive) {
+				state.isOpen = true;
+				document.getElementById('wk-panel').style.display = 'flex';
+				document.getElementById('wk-plans-modal').style.display = 'block';
+				callback(false);
+			} else {
+				callback(true);
+			}
+		},
+
+		// Event handling
+		on: (eventName, handler) => {
+			if (!eventHandlers[eventName]) {
+				eventHandlers[eventName] = [];
+			}
+			eventHandlers[eventName].push(handler);
+
+			// Return unsubscribe function
+			return () => {
+				const index = eventHandlers[eventName].indexOf(handler);
+				if (index > -1) {
+					eventHandlers[eventName].splice(index, 1);
+				}
+			};
+		},
+
+		// Utility
+		show: () => {
+			document.getElementById('walletkit-widget-root').style.display = 'block';
+		},
+
+		hide: () => {
+			document.getElementById('walletkit-widget-root').style.display = 'none';
+		},
+
+		destroy: () => {
+			document.getElementById('walletkit-widget-root').remove();
+		}
+	};
+
+	// Initialize on DOM ready
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', () => {
+			createWidgetHTML();
+			injectStyles();
+			initializeWidget();
+			emitEvent('ready');
+		});
+	} else {
+		createWidgetHTML();
+		injectStyles();
+		initializeWidget();
+		emitEvent('ready');
+	}
 })();

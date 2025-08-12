@@ -1,9 +1,12 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(npm run build:widget:*)",
-      "Bash(pnpm add:*)"
-    ],
-    "deny": []
-  }
+	"permissions": {
+		"allow": [
+			"Bash(npm run build:widget:*)",
+			"Bash(pnpm add:*)",
+			"Bash(pnpm check:*)",
+			"Bash(pnpm lint:*)",
+			"Bash(pnpm format:*)"
+		],
+		"deny": []
+	}
 }

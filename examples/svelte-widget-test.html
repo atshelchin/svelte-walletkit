@@ -1,435 +1,454 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WalletKit Svelte Widget Test</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 40px;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    }
-    
-    h1 {
-      color: #1f2937;
-      margin-bottom: 10px;
-    }
-    
-    .badge {
-      display: inline-block;
-      background: #10b981;
-      color: white;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 600;
-      margin-left: 12px;
-    }
-    
-    .subtitle {
-      color: #6b7280;
-      margin-bottom: 40px;
-    }
-    
-    .info-box {
-      background: #f3f4f6;
-      border-radius: 12px;
-      padding: 24px;
-      margin: 24px 0;
-    }
-    
-    .info-box h2 {
-      margin-top: 0;
-      color: #374151;
-      font-size: 20px;
-    }
-    
-    .code-block {
-      background: #1f2937;
-      color: #10b981;
-      padding: 16px;
-      border-radius: 8px;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      overflow-x: auto;
-    }
-    
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin: 40px 0;
-    }
-    
-    .feature-card {
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 20px;
-      transition: all 0.3s;
-    }
-    
-    .feature-card:hover {
-      border-color: #6366f1;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
-    }
-    
-    .feature-card h3 {
-      margin-top: 0;
-      color: #374151;
-    }
-    
-    button {
-      background: #6366f1;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s;
-      margin: 4px;
-    }
-    
-    button:hover {
-      background: #4f46e5;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-    }
-    
-    .status {
-      padding: 20px;
-      background: #f9fafb;
-      border-radius: 12px;
-      margin: 20px 0;
-    }
-    
-    .status-item {
-      display: flex;
-      justify-content: space-between;
-      margin: 10px 0;
-      padding: 8px 0;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    
-    .status-item:last-child {
-      border-bottom: none;
-    }
-    
-    .status-value {
-      font-weight: 600;
-      color: #6366f1;
-    }
-    
-    .log-container {
-      background: #1f2937;
-      color: #10b981;
-      padding: 20px;
-      border-radius: 12px;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      max-height: 300px;
-      overflow-y: auto;
-      margin-top: 20px;
-    }
-    
-    .log-entry {
-      margin: 4px 0;
-      opacity: 0;
-      animation: fadeIn 0.3s forwards;
-    }
-    
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-    
-    .comparison-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-    }
-    
-    .comparison-table th,
-    .comparison-table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    
-    .comparison-table th {
-      background: #f9fafb;
-      font-weight: 600;
-      color: #374151;
-    }
-    
-    .comparison-table tr:hover {
-      background: #f9fafb;
-    }
-    
-    .check {
-      color: #10b981;
-      font-weight: bold;
-    }
-    
-    .cross {
-      color: #ef4444;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>🎉 WalletKit Widget (Svelte Version) <span class="badge">LIVE</span></h1>
-    <p class="subtitle">This demonstrates the Svelte-built widget integrated with a single script tag!</p>
-    
-    <div class="info-box">
-      <h2>📦 What's Different?</h2>
-      <table class="comparison-table">
-        <thead>
-          <tr>
-            <th>Feature</th>
-            <th>Vanilla JS Version</th>
-            <th>Svelte Version</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Bundle Size</td>
-            <td>~100KB</td>
-            <td><strong>~40KB</strong> (-60%)</td>
-          </tr>
-          <tr>
-            <td>Build Process</td>
-            <td>Manual string templates</td>
-            <td><span class="check">✓</span> Compiled components</td>
-          </tr>
-          <tr>
-            <td>Reactivity</td>
-            <td>Manual DOM updates</td>
-            <td><span class="check">✓</span> Svelte 5 runes</td>
-          </tr>
-          <tr>
-            <td>Code Reusability</td>
-            <td>Widget only</td>
-            <td><span class="check">✓</span> NPM + Widget</td>
-          </tr>
-          <tr>
-            <td>Type Safety</td>
-            <td>Limited</td>
-            <td><span class="check">✓</span> Full TypeScript</td>
-          </tr>
-          <tr>
-            <td>Maintenance</td>
-            <td>Complex string manipulation</td>
-            <td><span class="check">✓</span> Component-based</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    
-    <div class="info-box">
-      <h2>🚀 How It Works</h2>
-      <p>The widget below is built with Svelte components and compiled into a standalone UMD bundle:</p>
-      <div class="code-block">
-&lt;script src="dist-widget/walletkit-widget.umd.cjs"
-        data-position="bottom-right"
-        data-theme="light"&gt;&lt;/script&gt;
-      </div>
-      <p style="margin-top: 16px;">
-        The same Svelte components (<code>FloatingAssistant.svelte</code>, <code>AccountPanel.svelte</code>) 
-        are used for both the NPM package and this standalone widget!
-      </p>
-    </div>
-    
-    <div class="status">
-      <h2>📊 Widget Status</h2>
-      <div class="status-item">
-        <span>Widget Loaded:</span>
-        <span class="status-value" id="widget-loaded">Checking...</span>
-      </div>
-      <div class="status-item">
-        <span>Connection Status:</span>
-        <span class="status-value" id="connection-status">Not Connected</span>
-      </div>
-      <div class="status-item">
-        <span>Account:</span>
-        <span class="status-value" id="account-address">-</span>
-      </div>
-      <div class="status-item">
-        <span>Subscription:</span>
-        <span class="status-value" id="subscription-status">No Subscription</span>
-      </div>
-    </div>
-    
-    <div class="feature-grid">
-      <div class="feature-card">
-        <h3>🧪 Test Connection</h3>
-        <p>Test the wallet connection flow</p>
-        <button onclick="testConnection()">Test Connect</button>
-        <button onclick="testDisconnect()">Test Disconnect</button>
-      </div>
-      
-      <div class="feature-card">
-        <h3>🎮 Widget Control</h3>
-        <p>Control the widget programmatically</p>
-        <button onclick="openWidget()">Open</button>
-        <button onclick="closeWidget()">Close</button>
-        <button onclick="toggleWidget()">Toggle</button>
-      </div>
-      
-      <div class="feature-card">
-        <h3>📱 API Testing</h3>
-        <p>Test the JavaScript API</p>
-        <button onclick="checkStatus()">Check Status</button>
-        <button onclick="getAccount()">Get Account</button>
-      </div>
-      
-      <div class="feature-card">
-        <h3>💎 Subscription</h3>
-        <p>Test subscription features</p>
-        <button onclick="checkSubscription()">Check Sub</button>
-        <button onclick="requireSubscription()">Require Sub</button>
-      </div>
-    </div>
-    
-    <div class="log-container" id="event-log">
-      <div class="log-entry">// Waiting for widget to load...</div>
-    </div>
-  </div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>WalletKit Svelte Widget Test</title>
+		<style>
+			body {
+				margin: 0;
+				font-family:
+					system-ui,
+					-apple-system,
+					sans-serif;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				min-height: 100vh;
+				padding: 40px;
+			}
 
-  <!-- 🎯 THE SVELTE WIDGET - Just one line! -->
-  <script src="../dist-widget/walletkit-widget.umd.cjs" 
-          data-position="bottom-right" 
-          data-theme="light"
-          data-chain-id="1"></script>
-  
-  <script>
-    // Logging helper
-    const log = (message, type = 'info') => {
-      const logContainer = document.getElementById('event-log');
-      const entry = document.createElement('div');
-      entry.className = 'log-entry';
-      const timestamp = new Date().toLocaleTimeString();
-      const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
-      entry.textContent = `[${timestamp}] ${icon} ${message}`;
-      logContainer.appendChild(entry);
-      logContainer.scrollTop = logContainer.scrollHeight;
-    };
-    
-    // Check if widget is loaded
-    if (typeof WalletKitWidget !== 'undefined') {
-      document.getElementById('widget-loaded').textContent = 'Yes (Loaded Immediately)';
-      log('Widget loaded immediately!', 'success');
-    } else {
-      document.getElementById('widget-loaded').textContent = 'Waiting...';
-    }
-    
-    // Wait for widget ready event
-    window.addEventListener('walletkit:ready', () => {
-      document.getElementById('widget-loaded').textContent = 'Yes (Ready Event Fired)';
-      log('🎉 WalletKit Widget (Svelte) is ready!', 'success');
-      
-      // Setup event listeners
-      WalletKitWidget.on('connected', (data) => {
-        log(`Wallet connected: ${data.address}`, 'success');
-        document.getElementById('connection-status').textContent = 'Connected';
-        document.getElementById('account-address').textContent = 
-          data.address.slice(0, 6) + '...' + data.address.slice(-4);
-      });
-      
-      WalletKitWidget.on('disconnected', () => {
-        log('Wallet disconnected', 'info');
-        document.getElementById('connection-status').textContent = 'Not Connected';
-        document.getElementById('account-address').textContent = '-';
-      });
-      
-      WalletKitWidget.on('subscriptionChanged', (data) => {
-        log(`Subscription changed: ${data.status}`, 'info');
-        document.getElementById('subscription-status').textContent = 
-          data.isActive ? `${data.plan} Plan` : 'No Subscription';
-      });
-    });
-    
-    // Test functions
-    async function testConnection() {
-      log('Testing connection...', 'info');
-      try {
-        await WalletKitWidget.connect();
-        log('Connection successful!', 'success');
-      } catch (error) {
-        log(`Connection failed: ${error.message}`, 'error');
-      }
-    }
-    
-    function testDisconnect() {
-      log('Disconnecting...', 'info');
-      WalletKitWidget.disconnect();
-    }
-    
-    function openWidget() {
-      log('Opening widget...', 'info');
-      WalletKitWidget.open();
-    }
-    
-    function closeWidget() {
-      log('Closing widget...', 'info');
-      WalletKitWidget.close();
-    }
-    
-    function toggleWidget() {
-      log('Toggling widget...', 'info');
-      WalletKitWidget.toggle();
-    }
-    
-    function checkStatus() {
-      const isConnected = WalletKitWidget.isConnected();
-      log(`Connection status: ${isConnected ? 'Connected' : 'Not connected'}`, 'info');
-    }
-    
-    function getAccount() {
-      const account = WalletKitWidget.getAccount();
-      if (account) {
-        log(`Account: ${account.address} (Chain: ${account.chainId}, Balance: ${account.balance} ETH)`, 'info');
-      } else {
-        log('No account connected', 'info');
-      }
-    }
-    
-    function checkSubscription() {
-      WalletKitWidget.checkSubscription((status) => {
-        log(`Subscription: ${status.isActive ? `Active (${status.plan})` : 'Not active'}`, 'info');
-      });
-    }
-    
-    function requireSubscription() {
-      log('Checking subscription requirement...', 'info');
-      WalletKitWidget.requireSubscription((hasAccess) => {
-        if (hasAccess) {
-          log('Subscription active! Access granted.', 'success');
-        } else {
-          log('No subscription. Widget should open to show plans.', 'info');
-        }
-      });
-    }
-    
-    // Log initial state
-    setTimeout(() => {
-      if (typeof WalletKitWidget === 'undefined') {
-        log('⚠️ Widget failed to load', 'error');
-        document.getElementById('widget-loaded').textContent = 'Failed';
-      }
-    }, 3000);
-  </script>
-</body>
+			.container {
+				max-width: 1200px;
+				margin: 0 auto;
+				background: white;
+				border-radius: 20px;
+				padding: 40px;
+				box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+			}
+
+			h1 {
+				color: #1f2937;
+				margin-bottom: 10px;
+			}
+
+			.badge {
+				display: inline-block;
+				background: #10b981;
+				color: white;
+				padding: 4px 12px;
+				border-radius: 20px;
+				font-size: 14px;
+				font-weight: 600;
+				margin-left: 12px;
+			}
+
+			.subtitle {
+				color: #6b7280;
+				margin-bottom: 40px;
+			}
+
+			.info-box {
+				background: #f3f4f6;
+				border-radius: 12px;
+				padding: 24px;
+				margin: 24px 0;
+			}
+
+			.info-box h2 {
+				margin-top: 0;
+				color: #374151;
+				font-size: 20px;
+			}
+
+			.code-block {
+				background: #1f2937;
+				color: #10b981;
+				padding: 16px;
+				border-radius: 8px;
+				font-family: 'Courier New', monospace;
+				font-size: 14px;
+				overflow-x: auto;
+			}
+
+			.feature-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+				gap: 20px;
+				margin: 40px 0;
+			}
+
+			.feature-card {
+				border: 2px solid #e5e7eb;
+				border-radius: 12px;
+				padding: 20px;
+				transition: all 0.3s;
+			}
+
+			.feature-card:hover {
+				border-color: #6366f1;
+				box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+			}
+
+			.feature-card h3 {
+				margin-top: 0;
+				color: #374151;
+			}
+
+			button {
+				background: #6366f1;
+				color: white;
+				border: none;
+				padding: 12px 24px;
+				border-radius: 8px;
+				font-size: 16px;
+				cursor: pointer;
+				transition: all 0.3s;
+				margin: 4px;
+			}
+
+			button:hover {
+				background: #4f46e5;
+				transform: translateY(-2px);
+				box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+			}
+
+			.status {
+				padding: 20px;
+				background: #f9fafb;
+				border-radius: 12px;
+				margin: 20px 0;
+			}
+
+			.status-item {
+				display: flex;
+				justify-content: space-between;
+				margin: 10px 0;
+				padding: 8px 0;
+				border-bottom: 1px solid #e5e7eb;
+			}
+
+			.status-item:last-child {
+				border-bottom: none;
+			}
+
+			.status-value {
+				font-weight: 600;
+				color: #6366f1;
+			}
+
+			.log-container {
+				background: #1f2937;
+				color: #10b981;
+				padding: 20px;
+				border-radius: 12px;
+				font-family: 'Courier New', monospace;
+				font-size: 14px;
+				max-height: 300px;
+				overflow-y: auto;
+				margin-top: 20px;
+			}
+
+			.log-entry {
+				margin: 4px 0;
+				opacity: 0;
+				animation: fadeIn 0.3s forwards;
+			}
+
+			@keyframes fadeIn {
+				to {
+					opacity: 1;
+				}
+			}
+
+			.comparison-table {
+				width: 100%;
+				border-collapse: collapse;
+				margin: 20px 0;
+			}
+
+			.comparison-table th,
+			.comparison-table td {
+				padding: 12px;
+				text-align: left;
+				border-bottom: 1px solid #e5e7eb;
+			}
+
+			.comparison-table th {
+				background: #f9fafb;
+				font-weight: 600;
+				color: #374151;
+			}
+
+			.comparison-table tr:hover {
+				background: #f9fafb;
+			}
+
+			.check {
+				color: #10b981;
+				font-weight: bold;
+			}
+
+			.cross {
+				color: #ef4444;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>🎉 WalletKit Widget (Svelte Version) <span class="badge">LIVE</span></h1>
+			<p class="subtitle">
+				This demonstrates the Svelte-built widget integrated with a single script tag!
+			</p>
+
+			<div class="info-box">
+				<h2>📦 What's Different?</h2>
+				<table class="comparison-table">
+					<thead>
+						<tr>
+							<th>Feature</th>
+							<th>Vanilla JS Version</th>
+							<th>Svelte Version</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Bundle Size</td>
+							<td>~100KB</td>
+							<td><strong>~40KB</strong> (-60%)</td>
+						</tr>
+						<tr>
+							<td>Build Process</td>
+							<td>Manual string templates</td>
+							<td><span class="check">✓</span> Compiled components</td>
+						</tr>
+						<tr>
+							<td>Reactivity</td>
+							<td>Manual DOM updates</td>
+							<td><span class="check">✓</span> Svelte 5 runes</td>
+						</tr>
+						<tr>
+							<td>Code Reusability</td>
+							<td>Widget only</td>
+							<td><span class="check">✓</span> NPM + Widget</td>
+						</tr>
+						<tr>
+							<td>Type Safety</td>
+							<td>Limited</td>
+							<td><span class="check">✓</span> Full TypeScript</td>
+						</tr>
+						<tr>
+							<td>Maintenance</td>
+							<td>Complex string manipulation</td>
+							<td><span class="check">✓</span> Component-based</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="info-box">
+				<h2>🚀 How It Works</h2>
+				<p>
+					The widget below is built with Svelte components and compiled into a standalone UMD
+					bundle:
+				</p>
+				<div class="code-block">
+					&lt;script src="dist-widget/walletkit-widget.umd.cjs" data-position="bottom-right"
+					data-theme="light"&gt;&lt;/script&gt;
+				</div>
+				<p style="margin-top: 16px">
+					The same Svelte components (<code>FloatingAssistant.svelte</code>,
+					<code>AccountPanel.svelte</code>) are used for both the NPM package and this standalone
+					widget!
+				</p>
+			</div>
+
+			<div class="status">
+				<h2>📊 Widget Status</h2>
+				<div class="status-item">
+					<span>Widget Loaded:</span>
+					<span class="status-value" id="widget-loaded">Checking...</span>
+				</div>
+				<div class="status-item">
+					<span>Connection Status:</span>
+					<span class="status-value" id="connection-status">Not Connected</span>
+				</div>
+				<div class="status-item">
+					<span>Account:</span>
+					<span class="status-value" id="account-address">-</span>
+				</div>
+				<div class="status-item">
+					<span>Subscription:</span>
+					<span class="status-value" id="subscription-status">No Subscription</span>
+				</div>
+			</div>
+
+			<div class="feature-grid">
+				<div class="feature-card">
+					<h3>🧪 Test Connection</h3>
+					<p>Test the wallet connection flow</p>
+					<button onclick="testConnection()">Test Connect</button>
+					<button onclick="testDisconnect()">Test Disconnect</button>
+				</div>
+
+				<div class="feature-card">
+					<h3>🎮 Widget Control</h3>
+					<p>Control the widget programmatically</p>
+					<button onclick="openWidget()">Open</button>
+					<button onclick="closeWidget()">Close</button>
+					<button onclick="toggleWidget()">Toggle</button>
+				</div>
+
+				<div class="feature-card">
+					<h3>📱 API Testing</h3>
+					<p>Test the JavaScript API</p>
+					<button onclick="checkStatus()">Check Status</button>
+					<button onclick="getAccount()">Get Account</button>
+				</div>
+
+				<div class="feature-card">
+					<h3>💎 Subscription</h3>
+					<p>Test subscription features</p>
+					<button onclick="checkSubscription()">Check Sub</button>
+					<button onclick="requireSubscription()">Require Sub</button>
+				</div>
+			</div>
+
+			<div class="log-container" id="event-log">
+				<div class="log-entry">// Waiting for widget to load...</div>
+			</div>
+		</div>
+
+		<!-- 🎯 THE SVELTE WIDGET - Just one line! -->
+		<script
+			src="../dist-widget/walletkit-widget.umd.cjs"
+			data-position="bottom-right"
+			data-theme="light"
+			data-chain-id="1"
+		></script>
+
+		<script>
+			// Logging helper
+			const log = (message, type = 'info') => {
+				const logContainer = document.getElementById('event-log');
+				const entry = document.createElement('div');
+				entry.className = 'log-entry';
+				const timestamp = new Date().toLocaleTimeString();
+				const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+				entry.textContent = `[${timestamp}] ${icon} ${message}`;
+				logContainer.appendChild(entry);
+				logContainer.scrollTop = logContainer.scrollHeight;
+			};
+
+			// Check if widget is loaded
+			if (typeof WalletKitWidget !== 'undefined') {
+				document.getElementById('widget-loaded').textContent = 'Yes (Loaded Immediately)';
+				log('Widget loaded immediately!', 'success');
+			} else {
+				document.getElementById('widget-loaded').textContent = 'Waiting...';
+			}
+
+			// Wait for widget ready event
+			window.addEventListener('walletkit:ready', () => {
+				document.getElementById('widget-loaded').textContent = 'Yes (Ready Event Fired)';
+				log('🎉 WalletKit Widget (Svelte) is ready!', 'success');
+
+				// Setup event listeners
+				WalletKitWidget.on('connected', (data) => {
+					log(`Wallet connected: ${data.address}`, 'success');
+					document.getElementById('connection-status').textContent = 'Connected';
+					document.getElementById('account-address').textContent =
+						data.address.slice(0, 6) + '...' + data.address.slice(-4);
+				});
+
+				WalletKitWidget.on('disconnected', () => {
+					log('Wallet disconnected', 'info');
+					document.getElementById('connection-status').textContent = 'Not Connected';
+					document.getElementById('account-address').textContent = '-';
+				});
+
+				WalletKitWidget.on('subscriptionChanged', (data) => {
+					log(`Subscription changed: ${data.status}`, 'info');
+					document.getElementById('subscription-status').textContent = data.isActive
+						? `${data.plan} Plan`
+						: 'No Subscription';
+				});
+			});
+
+			// Test functions
+			async function testConnection() {
+				log('Testing connection...', 'info');
+				try {
+					await WalletKitWidget.connect();
+					log('Connection successful!', 'success');
+				} catch (error) {
+					log(`Connection failed: ${error.message}`, 'error');
+				}
+			}
+
+			function testDisconnect() {
+				log('Disconnecting...', 'info');
+				WalletKitWidget.disconnect();
+			}
+
+			function openWidget() {
+				log('Opening widget...', 'info');
+				WalletKitWidget.open();
+			}
+
+			function closeWidget() {
+				log('Closing widget...', 'info');
+				WalletKitWidget.close();
+			}
+
+			function toggleWidget() {
+				log('Toggling widget...', 'info');
+				WalletKitWidget.toggle();
+			}
+
+			function checkStatus() {
+				const isConnected = WalletKitWidget.isConnected();
+				log(`Connection status: ${isConnected ? 'Connected' : 'Not connected'}`, 'info');
+			}
+
+			function getAccount() {
+				const account = WalletKitWidget.getAccount();
+				if (account) {
+					log(
+						`Account: ${account.address} (Chain: ${account.chainId}, Balance: ${account.balance} ETH)`,
+						'info'
+					);
+				} else {
+					log('No account connected', 'info');
+				}
+			}
+
+			function checkSubscription() {
+				WalletKitWidget.checkSubscription((status) => {
+					log(
+						`Subscription: ${status.isActive ? `Active (${status.plan})` : 'Not active'}`,
+						'info'
+					);
+				});
+			}
+
+			function requireSubscription() {
+				log('Checking subscription requirement...', 'info');
+				WalletKitWidget.requireSubscription((hasAccess) => {
+					if (hasAccess) {
+						log('Subscription active! Access granted.', 'success');
+					} else {
+						log('No subscription. Widget should open to show plans.', 'info');
+					}
+				});
+			}
+
+			// Log initial state
+			setTimeout(() => {
+				if (typeof WalletKitWidget === 'undefined') {
+					log('⚠️ Widget failed to load', 'error');
+					document.getElementById('widget-loaded').textContent = 'Failed';
+				}
+			}, 3000);
+		</script>
+	</body>
 </html>
