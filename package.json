@@ -6,6 +6,7 @@
 		"build": "npm run build:lib && npm run build:widget",
 		"build:lib": "vite build && svelte-kit sync && svelte-package",
 		"build:widget": "vite build --mode widget",
+		"build:docs": "svelte-kit sync && vite build",
 		"preview": "vite preview",
 		"preview:widget": "vite preview --mode widget --port 3001",
 		"prepare": "svelte-kit sync || echo ''",
@@ -47,6 +48,7 @@
 		"@eslint/js": "^9.18.0",
 		"@playwright/test": "^1.49.1",
 		"@sveltejs/adapter-auto": "^6.0.0",
+		"@sveltejs/adapter-static": "^3.0.9",
 		"@sveltejs/kit": "^2.22.0",
 		"@sveltejs/package": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^6.0.0",
@@ -76,8 +78,26 @@
 		"vitest-browser-svelte": "^0.1.0"
 	},
 	"keywords": [
-		"svelte"
+		"svelte",
+		"ethereum",
+		"wallet",
+		"web3",
+		"walletconnect",
+		"metamask",
+		"viem",
+		"dapp",
+		"blockchain"
 	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/shelchin/walletkit.git"
+	},
+	"homepage": "https://shelchin.github.io/walletkit",
+	"bugs": {
+		"url": "https://github.com/shelchin/walletkit/issues"
+	},
+	"author": "shelchin",
+	"license": "MIT",
 	"pnpm": {
 		"onlyBuiltDependencies": [
 			"esbuild"

@@ -1,0 +1,94 @@
+name: Deploy Documentation to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'static/**'
+      - 'docs/**'
+      - 'examples/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'svelte.config.js'
+      - 'vite.config.ts'
+      - '.github/workflows/docs-deploy.yml'
+  workflow_run:
+    workflows: ['Publish to NPM']
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build library and widget first
+        run: |
+          pnpm build:lib
+          pnpm build:widget
+
+      - name: Build documentation site
+        run: |
+          echo "Building documentation site..."
+          # Build the SvelteKit app as static site for GitHub Pages
+          BASE_PATH=/walletkit pnpm build:docs
+
+          # Copy widget and examples to build output
+          cp dist/widget.umd.cjs build/
+          cp dist/widget.umd.cjs.map build/
+          cp -r examples build/
+
+          # Add version info
+          VERSION=$(node -p "require('./package.json').version")
+          echo "{\"version\": \"$VERSION\", \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > build/version.json
+
+          # Create .nojekyll file to bypass Jekyll processing
+          touch build/.nojekyll
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-docs
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

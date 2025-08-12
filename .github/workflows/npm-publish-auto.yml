@@ -1,0 +1,167 @@
+name: Publish to NPM
+
+on:
+  # Trigger after CI workflow completes on main branch
+  workflow_run:
+    workflows: ['CI']
+    branches: [main, prod]
+    types:
+      - completed
+  # Manual trigger for emergency releases
+  workflow_dispatch:
+    inputs:
+      npm-tag:
+        description: 'NPM tag (latest, dev, beta)'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - latest
+          - dev
+          - beta
+
+jobs:
+  check-version:
+    # Only run if CI passed (or manual trigger)
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    outputs:
+      should-publish: ${{ steps.check.outputs.should-publish }}
+      version: ${{ steps.version.outputs.version }}
+      npm-tag: ${{ steps.version.outputs.npm-tag }}
+    steps:
+      - name: Debug workflow context
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "GitHub ref: ${{ github.ref }}"
+          echo "Workflow run head branch: ${{ github.event.workflow_run.head_branch }}"
+          echo "Workflow run head sha: ${{ github.event.workflow_run.head_sha }}"
+          echo "Will checkout: ${{ github.event.workflow_run.head_branch || github.ref }}"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # For workflow_run events, checkout the branch that triggered the CI
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
+          fetch-depth: 2 # Need previous commit to compare
+
+      - name: Verify checkout
+        run: |
+          echo "Current branch: $(git branch --show-current)"
+          echo "Current commit: $(git rev-parse HEAD)"
+          echo "Package.json version: $(node -p "require('./package.json').version")"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Check NPM version
+        id: check
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          LOCAL_VERSION=$(node -p "require('./package.json').version")
+
+          # Get published version from NPM
+          NPM_VERSION=$(npm view "$PACKAGE_NAME" version 2>/dev/null || echo "0.0.0")
+
+          echo "Package: $PACKAGE_NAME"
+          echo "Local version: $LOCAL_VERSION"
+          echo "NPM version: $NPM_VERSION"
+
+          # Compare versions
+          if [ "$LOCAL_VERSION" != "$NPM_VERSION" ]; then
+            echo "should-publish=true" >> $GITHUB_OUTPUT
+            echo "Version changed, will publish"
+          else
+            echo "should-publish=false" >> $GITHUB_OUTPUT
+            echo "Version unchanged, skipping publish"
+          fi
+
+      - name: Determine NPM tag
+        id: version
+        if: steps.check.outputs.should-publish == 'true'
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          # For manual dispatch, use the provided tag
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "npm-tag=${{ github.event.inputs.npm-tag }}" >> $GITHUB_OUTPUT
+          # Determine tag based on version
+          elif [[ "$VERSION" == *"-beta"* ]]; then
+            echo "npm-tag=beta" >> $GITHUB_OUTPUT
+          elif [[ "$VERSION" == *"-dev"* ]] || [[ "$VERSION" == *"-alpha"* ]]; then
+            echo "npm-tag=dev" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "npm-tag=latest" >> $GITHUB_OUTPUT
+          else
+            echo "npm-tag=dev" >> $GITHUB_OUTPUT
+          fi
+
+  publish:
+    needs: check-version
+    if: needs.check-version.outputs.should-publish == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build package
+        run: pnpm build
+
+      - name: Validate package
+        run: pnpm publint
+
+      - name: Publish to NPM
+        run: |
+          echo "Publishing version ${{ needs.check-version.outputs.version }} with tag '${{ needs.check-version.outputs.npm-tag }}'"
+          npm publish --access public --tag ${{ needs.check-version.outputs.npm-tag }} --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
+
+      - name: Create GitHub Release
+        if: needs.check-version.outputs.npm-tag == 'latest'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ needs.check-version.outputs.version }}
+          name: Release v${{ needs.check-version.outputs.version }}
+          generate_release_notes: true
+          files: |
+            dist/widget.umd.cjs
+            dist/widget.umd.cjs.map
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify success
+        run: |
+          echo "✅ Successfully published @shelchin/walletkit@${{ needs.check-version.outputs.version }}"
+          echo "NPM Package: https://www.npmjs.com/package/@shelchin/walletkit"
+          echo "Tag: ${{ needs.check-version.outputs.npm-tag }}"
