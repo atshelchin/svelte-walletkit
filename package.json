@@ -90,11 +90,11 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/shelchin/walletkit.git"
+		"url": "git+https://github.com/atshelchin/walletkit.git"
 	},
-	"homepage": "https://shelchin.github.io/walletkit",
+	"homepage": "https://atshelchin.github.io/walletkit",
 	"bugs": {
-		"url": "https://github.com/shelchin/walletkit/issues"
+		"url": "https://github.com/atshelchin/walletkit/issues"
 	},
 	"author": "shelchin",
 	"license": "MIT",
