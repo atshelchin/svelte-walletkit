@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:widget:*)",
+      "Bash(pnpm add:*)"
+    ],
+    "deny": []
+  }
+}
