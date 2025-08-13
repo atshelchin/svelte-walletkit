@@ -7,14 +7,13 @@
 	import {
 		X,
 		Plus,
-		Pencil,
 		Trash2,
 		Save,
 		AlertCircle,
 		Loader2,
 		RefreshCw,
 		CheckCircle,
-				CheckCircle2,
+		CheckCircle2,
 		XCircle,
 		Circle,
 		Network,
@@ -58,6 +57,8 @@
 	let searchQuery = $state('');
 	let currentPage = $state(1);
 	let itemsPerPage = $state(10);
+	let filterCategory = $state<'all' | 'mainnet' | 'testnet' | 'custom'>('all');
+	let sortBy = $state<'name' | 'chainId'>('name');
 	
 	// 反馈状态
 	let saveSuccess = $state(false);
@@ -70,16 +71,51 @@
 	const networks = $derived(networkStore.state.networks);
 	const currentNetwork = $derived(networkStore.state.currentNetwork);
 	
+	// 判断是否为测试网络
+	function isTestnet(chainId: number): boolean {
+		const testnetChainIds = [5, 11155111, 80001, 97, 421613, 420, 43113, 4002, 84531, 84532];
+		return testnetChainIds.includes(chainId);
+	}
+	
 	// 过滤的网络列表
 	const filteredNetworks = $derived(() => {
-		if (!searchQuery.trim()) return networks;
-		const query = searchQuery.toLowerCase();
-		return networks.filter(network => 
-			network.name.toLowerCase().includes(query) ||
-			network.chainId.toString().includes(query) ||
-			network.nativeCurrency.symbol.toLowerCase().includes(query)
-		);
-	});
+		let filtered = networks;
+		
+		// 按类别过滤
+		if (filterCategory !== 'all') {
+			filtered = filtered.filter(network => {
+				if (filterCategory === 'custom') {
+					return !networkStore.isPresetNetwork(network.chainId);
+				} else if (filterCategory === 'testnet') {
+					return isTestnet(network.chainId);
+				} else if (filterCategory === 'mainnet') {
+					return !isTestnet(network.chainId) && networkStore.isPresetNetwork(network.chainId);
+				}
+				return true;
+			});
+		}
+		
+		// 按搜索过滤
+		if (searchQuery.trim()) {
+			const query = searchQuery.toLowerCase();
+			filtered = filtered.filter(network => 
+				network.name.toLowerCase().includes(query) ||
+				network.chainId.toString().includes(query) ||
+				network.nativeCurrency.symbol.toLowerCase().includes(query)
+			);
+		}
+		
+		// 排序
+		filtered = [...filtered].sort((a, b) => {
+			if (sortBy === 'name') {
+				return a.name.localeCompare(b.name);
+			} else {
+				return a.chainId - b.chainId;
+			}
+		});
+		
+		return filtered;
+		});
 	
 	// 显示 Toast 通知
 	function showToast(message: string, type: 'success' | 'error' | 'info' = 'success') {
@@ -736,9 +772,15 @@
 				</div>
 
 				{#if saveStatus === 'error' && saveError}
-					<div class="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-red-700 shadow-sm dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
-						<XCircle class="h-4 w-4 flex-shrink-0" />
-						<p class="text-sm font-medium">{saveError}</p>
+					<div class="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+						<div class="flex items-start gap-3">
+							<XCircle class="h-5 w-5 flex-shrink-0 text-red-500 dark:text-red-400" />
+							<div class="flex-1">
+								<h4 class="font-medium text-red-900 dark:text-red-300">Failed to save network</h4>
+								<p class="mt-1 text-sm text-red-700 dark:text-red-400">{saveError}</p>
+								<p class="mt-2 text-xs text-red-600 dark:text-red-500">Please check your network configuration and try again.</p>
+							</div>
+						</div>
 					</div>
 				{/if}
 
@@ -780,7 +822,7 @@
 			<div class="space-y-4">
 				<!-- 顶部操作栏 -->
 				<div class="space-y-3">
-					<!-- 按钮组 -->
+					<!-- 第一行: 按钮和搜索 -->
 					<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 						<div class="flex flex-wrap gap-2">
 							<button
@@ -799,27 +841,59 @@
 							</button>
 						</div>
 						
-						<!-- 搜索框 - 桌面端 -->
-						<div class="relative hidden sm:block">
+						<!-- 搜索框 -->
+						<div class="relative w-full sm:w-auto">
 							<Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
 							<input
 								type="text"
 								bind:value={searchQuery}
 								placeholder="Search networks..."
-								class="w-56 rounded-lg border border-slate-200 bg-white pl-10 pr-3 py-2 text-sm text-slate-900 shadow-sm transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:focus:border-indigo-400 dark:focus:ring-indigo-400/20"
+								class="w-full sm:w-56 rounded-lg border border-slate-200 bg-white pl-10 pr-3 py-2 text-sm text-slate-900 shadow-sm transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:focus:border-indigo-400 dark:focus:ring-indigo-400/20"
 							/>
 						</div>
 					</div>
 					
-					<!-- 搜索框 - 移动端 -->
-					<div class="relative sm:hidden">
-						<Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-						<input
-							type="text"
-							bind:value={searchQuery}
-							placeholder="Search networks..."
-							class="w-full rounded-lg border border-slate-200 bg-white pl-10 pr-3 py-2 text-sm text-slate-900 shadow-sm transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:focus:border-indigo-400 dark:focus:ring-indigo-400/20"
-						/>
+					<!-- 第二行: 分类筛选和排序 -->
+					<div class="flex flex-wrap items-center justify-between gap-3">
+						<!-- 分类筛选 -->
+						<div class="flex flex-wrap gap-1">
+							<button
+								onclick={() => filterCategory = 'all'}
+								class="rounded-lg px-3 py-1.5 text-xs font-medium transition-all {filterCategory === 'all' ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'}"
+							>
+								All ({networks.length})
+							</button>
+							<button
+								onclick={() => filterCategory = 'mainnet'}
+								class="rounded-lg px-3 py-1.5 text-xs font-medium transition-all {filterCategory === 'mainnet' ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'}"
+							>
+								Mainnets ({networks.filter(n => !isTestnet(n.chainId) && networkStore.isPresetNetwork(n.chainId)).length})
+							</button>
+							<button
+								onclick={() => filterCategory = 'testnet'}
+								class="rounded-lg px-3 py-1.5 text-xs font-medium transition-all {filterCategory === 'testnet' ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'}"
+							>
+								Testnets ({networks.filter(n => isTestnet(n.chainId)).length})
+							</button>
+							<button
+								onclick={() => filterCategory = 'custom'}
+								class="rounded-lg px-3 py-1.5 text-xs font-medium transition-all {filterCategory === 'custom' ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'}"
+							>
+								Custom ({networks.filter(n => !networkStore.isPresetNetwork(n.chainId)).length})
+							</button>
+						</div>
+						
+						<!-- 排序选项 -->
+						<div class="flex items-center gap-2">
+							<span class="text-xs text-slate-500 dark:text-slate-400">Sort:</span>
+							<select
+								bind:value={sortBy}
+								class="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs text-slate-700 transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+							>
+								<option value="name">Name</option>
+								<option value="chainId">Chain ID</option>
+							</select>
+						</div>
 					</div>
 				</div>
 
@@ -838,10 +912,13 @@
 					<div class="min-h-[320px]">
 						<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 							{#each paginatedNetworks() as network (network.chainId)}
-							<div class="group relative overflow-hidden rounded-xl border border-slate-200/50 bg-gradient-to-br from-white to-slate-50/50 p-3 transition-all hover:shadow-lg hover:ring-2 hover:ring-indigo-500/20 dark:border-slate-700/50 dark:from-slate-800/50 dark:to-slate-900/50 dark:hover:ring-indigo-400/20">
+							<button
+								onclick={() => startEditNetwork(network)}
+								class="group relative overflow-hidden rounded-xl border border-slate-200/50 bg-gradient-to-br from-white to-slate-50/50 p-3 text-left transition-all hover:shadow-lg hover:ring-2 hover:ring-indigo-500/20 hover:cursor-pointer dark:border-slate-700/50 dark:from-slate-800/50 dark:to-slate-900/50 dark:hover:ring-indigo-400/20"
+							>
 								<div class="absolute top-0 right-0 h-24 w-24 translate-x-6 -translate-y-6 rounded-full bg-gradient-to-br from-indigo-500/5 to-purple-500/5 blur-xl transition-all group-hover:from-indigo-500/10 group-hover:to-purple-500/10"></div>
 								<div class="relative">
-									<div class="mb-2.5">
+									<div class="mb-2">
 										<div class="flex items-center justify-between">
 											<div class="min-w-0 flex-1">
 												<div class="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
@@ -868,31 +945,36 @@
 													<span class="rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 px-2 py-0.5 text-[10px] font-medium text-white shadow-sm">
 														Modified
 													</span>
+												{:else if isTestnet(network.chainId)}
+													<span class="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2 py-0.5 text-[10px] font-medium text-white shadow-sm">
+														Testnet
+													</span>
 												{/if}
 											</div>
 										</div>
 									</div>
 
-									<div class="flex items-center gap-1.5">
-										<button
-											onclick={() => startEditNetwork(network)}
-											class="flex-1 rounded-lg bg-slate-100/80 px-2.5 py-1.5 text-xs font-medium text-slate-700 transition-all hover:bg-slate-200 dark:bg-slate-700/50 dark:text-slate-300 dark:hover:bg-slate-600"
-										>
-											<Pencil class="mr-1 inline h-3 w-3" />
-											Edit
-										</button>
-										{#if networkStore.canDeleteNetwork(network.chainId)}
+									{#if networkStore.canDeleteNetwork(network.chainId)}
+										<div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+											<span class="opacity-0 group-hover:opacity-100 transition-opacity">Click to edit</span>
 											<button
-												onclick={() => handleDelete(network)}
+												onclick={(e) => {
+													e.stopPropagation();
+													handleDelete(network);
+												}}
 												class="rounded-lg bg-red-50/80 p-1.5 text-red-500 transition-all hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30"
 												title="Delete network"
 											>
 												<Trash2 class="h-3.5 w-3.5" />
 											</button>
-										{/if}
-									</div>
+										</div>
+									{:else}
+										<div class="text-xs text-slate-500 dark:text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">
+											Click to edit
+										</div>
+									{/if}
 								</div>
-							</div>
+							</button>
 						{/each}
 						</div>
 					</div>
