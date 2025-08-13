@@ -177,17 +177,17 @@
 				<div class="rounded-lg bg-gray-900 p-6">
 					<div class="mb-4 text-sm font-medium text-gray-400">Svelte Component</div>
 					<pre class="overflow-x-auto text-sm text-gray-300"><code
-							>{`<script>
-  import { WalletKit, WalletButton } from '@shelchin/svelte-walletkit';
-</script>
+							>&lt;script&gt;
+  import {'{ WalletKit, WalletButton }'} from '@shelchin/svelte-walletkit';
+&lt;/script&gt;
 
-<WalletKit 
+&lt;WalletKit 
   theme="auto"
   locale="en"
-  networks={[1, 137, 42161]}
->
-  <WalletButton />
-</WalletKit>`}</code
+  networks={'{[1, 137, 42161]}'}
+&gt;
+  &lt;WalletButton /&gt;
+&lt;/WalletKit&gt;</code
 						></pre>
 				</div>
 
@@ -195,14 +195,14 @@
 				<div class="mt-8 rounded-lg bg-gray-900 p-6">
 					<div class="mb-4 text-sm font-medium text-gray-400">Standalone HTML</div>
 					<pre class="overflow-x-auto text-sm text-gray-300"><code
-							>{`<script src="https://unpkg.com/@shelchin/svelte-walletkit/dist/standalone.js"></script>
-<script>
-  WalletKit.init({
+							>&lt;script src="https://unpkg.com/@shelchin/svelte-walletkit/dist/standalone.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  WalletKit.init({'{'}
     containerId: 'wallet-container',
     theme: 'dark',
     networks: [1, 137, 42161]
   });
-</script>`}</code
+&lt;/script&gt;</code
 						></pre>
 				</div>
 			</div>
