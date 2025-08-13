@@ -162,6 +162,6 @@ jobs:
 
       - name: Notify success
         run: |
-          echo "✅ Successfully published @shelchin/walletkit@${{ needs.check-version.outputs.version }}"
-          echo "NPM Package: https://www.npmjs.com/package/@shelchin/walletkit"
+          echo "✅ Successfully published @shelchin/svelte-walletkit@${{ needs.check-version.outputs.version }}"
+          echo "NPM Package: https://www.npmjs.com/package/@shelchin/svelte-walletkit"
           echo "Tag: ${{ needs.check-version.outputs.npm-tag }}"

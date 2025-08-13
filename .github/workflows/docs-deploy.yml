@@ -63,7 +63,7 @@ jobs:
         run: |
           echo "Building documentation site..."
           # Build the SvelteKit app as static site for GitHub Pages
-          BASE_PATH=/walletkit pnpm build:docs
+          BASE_PATH=/svelte-walletkit pnpm build:docs
 
           # Copy widget and examples to build output
           cp dist/widget.umd.cjs build/
