@@ -1,5 +1,6 @@
 <script lang="ts">
 	import NetworkSelector from '$lib/presentation/components/NetworkSelector.svelte';
+	import NetworkManagerV2 from '$lib/presentation/components/NetworkManagerV2.svelte';
 	import { networkStore } from '$lib/presentation/stores/networkStore.svelte';
 	import {
 		Network,
@@ -411,7 +412,18 @@
 				</div>
 				<div class="flex flex-wrap gap-3">
 					<button
-						onclick={() => networkStore.resetToPresetNetworks()}
+						onclick={() => {
+							console.log('Reset button clicked');
+							console.log('NetworkStore state before:', networkStore.state);
+							try {
+								networkStore.resetToPresetNetworks();
+								console.log('NetworkStore state after:', networkStore.state);
+								alert('Networks reset to presets successfully!');
+							} catch (err) {
+								console.error('Failed to reset networks:', err);
+								alert(`Failed to reset networks: ${err}`);
+							}
+						}}
 						class="group flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2.5 font-medium text-white backdrop-blur transition-all hover:bg-white/20"
 					>
 						<RefreshCw class="h-4 w-4 transition-transform group-hover:rotate-180" />
@@ -419,22 +431,27 @@
 					</button>
 					<button
 						onclick={async () => {
+							console.log('Add network button clicked');
+							console.log('NetworkStore state before:', networkStore.state);
 							try {
+								// 使用公共的测试网络，不需要本地运行节点
 								await networkStore.addNetwork({
-									chainId: 31337,
-									name: 'Local Hardhat',
-									rpcUrls: ['http://127.0.0.1:8545'],
-									defaultRpcUrl: 'http://127.0.0.1:8545',
+									chainId: 1337,
+									name: 'Custom Test Network',
+									rpcUrls: ['https://rpc.ankr.com/eth_goerli'],
+									defaultRpcUrl: 'https://rpc.ankr.com/eth_goerli',
 									nativeCurrency: {
-										name: 'Ether',
-										symbol: 'ETH',
+										name: 'Test Ether',
+										symbol: 'tETH',
 										decimals: 18
 									},
-									blockExplorers: ['http://localhost:3000'],
-									defaultBlockExplorer: 'http://localhost:3000'
+									blockExplorers: ['https://goerli.etherscan.io'],
+									defaultBlockExplorer: 'https://goerli.etherscan.io'
 								});
+								console.log('NetworkStore state after:', networkStore.state);
 								alert('Test network added successfully!');
 							} catch (err) {
+								console.error('Failed to add test network:', err);
 								alert(`Failed to add test network: ${err}`);
 							}
 						}}

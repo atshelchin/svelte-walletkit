@@ -44,7 +44,7 @@ export class NetworkValidator {
 				chainId,
 				latency
 			};
-		} catch {
+		} catch (error) {
 			return {
 				valid: false,
 				error: error instanceof Error ? error.message : 'Failed to connect to RPC'
@@ -121,7 +121,7 @@ export class NetworkValidator {
 			}
 
 			return { valid: true };
-		} catch {
+		} catch (error) {
 			return {
 				valid: false,
 				error: 'Invalid URL format'

@@ -182,6 +182,13 @@ class NetworkStore {
 	}
 
 	/**
+	 * 检查网络是否可以被删除
+	 */
+	canDeleteNetwork(chainId: number): boolean {
+		return this.manager?.canDeleteNetwork(chainId) ?? false;
+	}
+
+	/**
 	 * 重置为预设网络
 	 */
 	resetToPresetNetworks() {

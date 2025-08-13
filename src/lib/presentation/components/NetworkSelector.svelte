@@ -2,7 +2,7 @@
 	import type { NetworkConfig } from '$lib/domain/types/WalletTypes.js';
 	import { networkStore } from '$lib/presentation/stores/networkStore.svelte';
 	import NetworkQuickEdit from './NetworkQuickEdit.svelte';
-	import NetworkManager from './NetworkManager.svelte';
+	import NetworkManager from './NetworkManagerV2.svelte';
 	import ModalWrapper from '$lib/presentation/components/shared/ModalWrapper.svelte';
 	import { ChevronDown, Globe, Check, PenLine, Plus } from '@lucide/svelte';
 

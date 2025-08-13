@@ -7,20 +7,23 @@
 	import {
 		X,
 		Plus,
-		Edit2,
+		Edit,
 		Trash2,
 		Save,
-		AlertCircle,
-		Loader2,
+		AlertTriangle,
+		Loader,
 		RefreshCw,
-		CheckCircle,
+		CheckCircle2,
 		XCircle,
 		Globe,
 		Circle,
 		Network,
 		Server,
 		Coins,
-		Search
+		Search as SearchIcon,
+		ChevronLeft,
+		ChevronRight,
+		Check
 	} from '@lucide/svelte';
 
 	interface Props {
@@ -47,6 +50,13 @@
 	let isValidating = $state(false);
 	let isSaving = $state(false);
 	let rpcValidationStates = $state<Record<string, RpcValidationState>>({});
+	
+	// 搜索和分页状态
+	let searchQuery = $state('');
+	let currentPage = $state(1);
+	let itemsPerPage = $state(10);
+	let saveSuccess = $state(false);
+	let saveError = $state('');
 
 	// 获取网络状态
 	const networks = $derived(networkStore.state.networks);
@@ -168,7 +178,7 @@
 				delete errors[`rpc_${url}`];
 				validationErrors = errors;
 			}
-		} catch {
+		} catch (error) {
 			rpcValidationStates = {
 				...rpcValidationStates,
 				[url]: {
@@ -292,7 +302,13 @@
 	}
 
 	async function handleDelete(network: NetworkConfig) {
-		if (confirm(`Are you sure you want to delete ${network.name}?`)) {
+		// 再次检查是否可以删除
+		if (!networkStore.canDeleteNetwork(network.chainId)) {
+			alert('This network cannot be deleted. Only custom networks can be removed.');
+			return;
+		}
+
+		if (confirm(`Are you sure you want to delete "${network.name}"?\n\nThis action cannot be undone.`)) {
 			try {
 				networkStore.removeNetwork(network.chainId);
 			} catch (error) {
@@ -681,11 +697,17 @@
 										Active
 									</span>
 								{/if}
-								{#if networkStore.isCustomNetwork(network.chainId)}
+								{#if !networkStore.isPresetNetwork(network.chainId)}
 									<span
 										class="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-0.5 text-xs font-medium text-white"
 									>
 										Custom
+									</span>
+								{:else if networkStore.isCustomNetwork(network.chainId)}
+									<span
+										class="rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 px-2 py-0.5 text-xs font-medium text-white"
+									>
+										Modified
 									</span>
 								{/if}
 								<button
@@ -694,10 +716,11 @@
 								>
 									<Edit2 class="h-4 w-4" />
 								</button>
-								{#if networkStore.isCustomNetwork(network.chainId) && currentNetwork?.chainId !== network.chainId}
+								{#if networkStore.canDeleteNetwork(network.chainId)}
 									<button
 										onclick={() => handleDelete(network)}
 										class="rounded-lg p-2 text-red-500 transition-all hover:bg-red-50 dark:hover:bg-red-900/50"
+										title="Delete network"
 									>
 										<Trash2 class="h-4 w-4" />
 									</button>

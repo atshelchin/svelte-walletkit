@@ -69,7 +69,7 @@ export class MetaMaskConnector implements IWalletPort {
 			});
 
 			return accounts.length > 0 ? new Address(accounts[0]) : null;
-		} catch {
+		} catch (error) {
 			return null;
 		}
 	}

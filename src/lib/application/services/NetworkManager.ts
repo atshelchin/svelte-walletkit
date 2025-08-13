@@ -34,6 +34,7 @@ export class NetworkManager {
 				const stored = localStorage.getItem(this.storageKey);
 				if (stored) {
 					const customNetworks = JSON.parse(stored) as NetworkConfig[];
+					console.log('Loading custom networks from localStorage:', customNetworks);
 					customNetworks.forEach((network) => {
 						this.networks.set(network.chainId, network);
 					});
@@ -56,8 +57,10 @@ export class NetworkManager {
 					return !preset || JSON.stringify(preset) !== JSON.stringify(network);
 				});
 				localStorage.setItem(this.storageKey, JSON.stringify(customNetworks));
+				console.log('Saved custom networks to localStorage:', customNetworks);
 			} catch (error) {
 				console.error('Failed to save custom networks:', error);
+				throw error; // Re-throw to surface the error
 			}
 		}
 	}
@@ -259,7 +262,7 @@ export class NetworkManager {
 	}
 
 	/**
-	 * 检查是否为自定义网络
+	 * 检查是否为自定义网络（包括修改过的预设网络）
 	 */
 	isCustomNetwork(chainId: number): boolean {
 		if (!this.networks.has(chainId)) {
@@ -268,6 +271,18 @@ export class NetworkManager {
 		const network = this.networks.get(chainId)!;
 		const preset = this.presetNetworks.find((p) => p.chainId === chainId);
 		return !preset || JSON.stringify(preset) !== JSON.stringify(network);
+	}
+
+	/**
+	 * 检查网络是否可以被删除（只有用户添加的全新网络可以删除）
+	 */
+	canDeleteNetwork(chainId: number): boolean {
+		// 不能删除当前网络
+		if (this.currentChainId === chainId) {
+			return false;
+		}
+		// 只能删除不在预设列表中的网络
+		return !this.presetNetworks.some((network) => network.chainId === chainId);
 	}
 
 	/**
