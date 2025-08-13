@@ -1,20 +1,6 @@
 <script lang="ts" context="module">
 	export type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 	export type TextVariant = 'body' | 'body-small' | 'caption' | 'label';
-</script>
-
-<script lang="ts">
-	interface HeadingProps {
-		level?: HeadingLevel;
-		class?: string;
-		children?: any;
-	}
-
-	interface TextProps {
-		variant?: TextVariant;
-		class?: string;
-		children?: any;
-	}
 
 	// Heading styles - 使用柔和的暗色模式颜色
 	const headingStyles = {
@@ -34,35 +20,6 @@
 		label: 'text-sm font-medium text-slate-700 dark:text-slate-300'
 	};
 
-	export function Heading(props: HeadingProps) {
-		const { level = 'h2', class: className = '', children } = props;
-		const Element = level;
-		const baseStyles = headingStyles[level];
-		const combinedClass = `${baseStyles} ${className}`.trim();
-
-		return {
-			Element,
-			combinedClass,
-			children
-		};
-	}
-
-	export function Text(props: TextProps) {
-		const { variant = 'body', class: className = '', children } = props;
-		const baseStyles = textStyles[variant];
-		const combinedClass = `${baseStyles} ${className}`.trim();
-
-		return {
-			combinedClass,
-			children
-		};
-	}
-</script>
-
-<!-- Export individual components for easy use -->
-
-<!-- Heading Components -->
-<script lang="ts" context="module">
 	// H1 - Page titles
 	export function H1({ class: className = '', children, ...props }: any) {
 		const styles = `${headingStyles.h1} ${className}`.trim();
@@ -118,6 +75,44 @@
 	export function Label({ class: className = '', children, ...props }: any) {
 		const styles = `${textStyles.label} ${className}`.trim();
 		return { as: 'label', class: styles, children, ...props };
+	}
+</script>
+
+<script lang="ts">
+	interface HeadingProps {
+		level?: HeadingLevel;
+		class?: string;
+		children?: any;
+	}
+
+	interface TextProps {
+		variant?: TextVariant;
+		class?: string;
+		children?: any;
+	}
+
+	export function Heading(props: HeadingProps) {
+		const { level = 'h2', class: className = '', children } = props;
+		const Element = level;
+		const baseStyles = headingStyles[level];
+		const combinedClass = `${baseStyles} ${className}`.trim();
+
+		return {
+			Element,
+			combinedClass,
+			children
+		};
+	}
+
+	export function Text(props: TextProps) {
+		const { variant = 'body', class: className = '', children } = props;
+		const baseStyles = textStyles[variant];
+		const combinedClass = `${baseStyles} ${className}`.trim();
+
+		return {
+			combinedClass,
+			children
+		};
 	}
 </script>
 
