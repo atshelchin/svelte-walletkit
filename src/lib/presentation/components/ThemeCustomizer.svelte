@@ -239,12 +239,12 @@
 	// Generate theme code
 	function generateThemeCode(): string {
 		return `// WalletKit Custom Theme Configuration
-import type { WalletKitTheme } from '@shelchin/walletkit';
+import type { WalletKitTheme } from '@shelchin/svelte-walletkit';
 
 export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme, null, 2)};
 
 // Usage:
-// import { WalletKit } from '@shelchin/walletkit';
+// import { WalletKit } from '@shelchin/svelte-walletkit';
 // import { customTheme } from './theme';
 // 
 // <WalletKit theme={customTheme} />`;

@@ -48,18 +48,18 @@ yarn add @shelchin/walletkit
 
 ```svelte
 <script>
-  import { WalletKit, WalletButton } from '@shelchin/walletkit';
-  
-  const config = {
-    projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Required for WalletConnect
-    networks: [1, 137, 42161], // Ethereum, Polygon, Arbitrum
-    theme: 'auto', // 'light' | 'dark' | 'auto'
-    locale: 'en' // 'en' | 'zh'
-  };
+	import { WalletKit, WalletButton } from '@shelchin/walletkit';
+
+	const config = {
+		projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Required for WalletConnect
+		networks: [1, 137, 42161], // Ethereum, Polygon, Arbitrum
+		theme: 'auto', // 'light' | 'dark' | 'auto'
+		locale: 'en' // 'en' | 'zh'
+	};
 </script>
 
 <WalletKit {config}>
-  <WalletButton />
+	<WalletButton />
 </WalletKit>
 ```
 
@@ -70,12 +70,12 @@ yarn add @shelchin/walletkit
 
 <script src="https://unpkg.com/@shelchin/walletkit/dist/standalone.js"></script>
 <script>
-  WalletKit.init({
-    containerId: 'wallet-container',
-    projectId: 'YOUR_WALLETCONNECT_PROJECT_ID',
-    theme: 'dark',
-    networks: [1, 137, 42161]
-  });
+	WalletKit.init({
+		containerId: 'wallet-container',
+		projectId: 'YOUR_WALLETCONNECT_PROJECT_ID',
+		theme: 'dark',
+		networks: [1, 137, 42161]
+	});
 </script>
 ```
 
@@ -85,39 +85,39 @@ yarn add @shelchin/walletkit
 
 ```typescript
 interface WalletKitConfig {
-  // WalletConnect Project ID (required for WalletConnect)
-  projectId?: string;
-  
-  // Supported networks (chain IDs)
-  networks?: number[];
-  
-  // Custom RPC endpoints
-  rpcUrls?: Record<number, string[]>;
-  
-  // Theme configuration
-  theme?: 'light' | 'dark' | 'auto' | ThemeConfig;
-  
-  // Localization
-  locale?: 'en' | 'zh' | LocaleConfig;
-  
-  // Wallet options
-  wallets?: {
-    includeDefault?: boolean;
-    custom?: WalletConfig[];
-  };
-  
-  // Features
-  features?: {
-    ensResolution?: boolean;
-    siwe?: boolean; // Sign-In with Ethereum
-    analytics?: boolean;
-  };
-  
-  // Custom modal options
-  modal?: {
-    disableBackdropClick?: boolean;
-    showRecentTransactions?: boolean;
-  };
+	// WalletConnect Project ID (required for WalletConnect)
+	projectId?: string;
+
+	// Supported networks (chain IDs)
+	networks?: number[];
+
+	// Custom RPC endpoints
+	rpcUrls?: Record<number, string[]>;
+
+	// Theme configuration
+	theme?: 'light' | 'dark' | 'auto' | ThemeConfig;
+
+	// Localization
+	locale?: 'en' | 'zh' | LocaleConfig;
+
+	// Wallet options
+	wallets?: {
+		includeDefault?: boolean;
+		custom?: WalletConfig[];
+	};
+
+	// Features
+	features?: {
+		ensResolution?: boolean;
+		siwe?: boolean; // Sign-In with Ethereum
+		analytics?: boolean;
+	};
+
+	// Custom modal options
+	modal?: {
+		disableBackdropClick?: boolean;
+		showRecentTransactions?: boolean;
+	};
 }
 ```
 
@@ -125,23 +125,23 @@ interface WalletKitConfig {
 
 ```javascript
 const customTheme = {
-  colors: {
-    primary: '#6366f1',
-    background: '#ffffff',
-    text: '#111827',
-    border: '#e5e7eb'
-  },
-  radius: {
-    button: '0.75rem',
-    modal: '1.5rem'
-  },
-  fonts: {
-    base: 'Inter, system-ui, sans-serif'
-  }
+	colors: {
+		primary: '#6366f1',
+		background: '#ffffff',
+		text: '#111827',
+		border: '#e5e7eb'
+	},
+	radius: {
+		button: '0.75rem',
+		modal: '1.5rem'
+	},
+	fonts: {
+		base: 'Inter, system-ui, sans-serif'
+	}
 };
 
 WalletKit.init({
-  theme: customTheme
+	theme: customTheme
 });
 ```
 
@@ -149,13 +149,13 @@ WalletKit.init({
 
 ```javascript
 const customNetworks = {
-  networks: [1, 137, 42161, 56], // Include BSC
-  rpcUrls: {
-    1: ['https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY'],
-    137: ['https://polygon-rpc.com'],
-    42161: ['https://arb1.arbitrum.io/rpc'],
-    56: ['https://bsc-dataseed.binance.org']
-  }
+	networks: [1, 137, 42161, 56], // Include BSC
+	rpcUrls: {
+		1: ['https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY'],
+		137: ['https://polygon-rpc.com'],
+		42161: ['https://arb1.arbitrum.io/rpc'],
+		56: ['https://bsc-dataseed.binance.org']
+	}
 };
 ```
 
@@ -183,10 +183,10 @@ WalletKit is fully optimized for mobile devices with:
 import { createTheme } from '@shelchin/walletkit';
 
 const myTheme = createTheme({
-  primary: '#8b5cf6',
-  secondary: '#ec4899',
-  borderRadius: 'lg',
-  fontFamily: 'Roboto, sans-serif'
+	primary: '#8b5cf6',
+	secondary: '#ec4899',
+	borderRadius: 'lg',
+	fontFamily: 'Roboto, sans-serif'
 });
 ```
 
@@ -201,15 +201,15 @@ const myTheme = createTheme({
 
 ```javascript
 const customLocale = {
-  connect: 'Connect Wallet',
-  disconnect: 'Disconnect',
-  switchNetwork: 'Switch Network',
-  copyAddress: 'Copy Address',
-  // ... more translations
+	connect: 'Connect Wallet',
+	disconnect: 'Disconnect',
+	switchNetwork: 'Switch Network',
+	copyAddress: 'Copy Address'
+	// ... more translations
 };
 
 WalletKit.init({
-  locale: customLocale
+	locale: customLocale
 });
 ```
 
@@ -245,29 +245,24 @@ WalletKit.sendTransaction(tx: TransactionRequest): Promise<string>
 ```javascript
 // Account change
 WalletKit.onAccountChange((account) => {
-  console.log('Account changed:', account);
+	console.log('Account changed:', account);
 });
 
 // Network change
 WalletKit.onChainChange((chainId) => {
-  console.log('Network changed:', chainId);
+	console.log('Network changed:', chainId);
 });
 
 // Connection status
 WalletKit.onConnectionChange((connected) => {
-  console.log('Connection status:', connected);
+	console.log('Connection status:', connected);
 });
 ```
 
 ### Svelte Stores
 
 ```javascript
-import { 
-  account, 
-  chainId, 
-  connected, 
-  connecting 
-} from '@shelchin/walletkit';
+import { account, chainId, connected, connecting } from '@shelchin/walletkit';
 
 // Use in Svelte components
 $: currentAccount = $account;

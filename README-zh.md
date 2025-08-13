@@ -48,18 +48,18 @@ yarn add @shelchin/walletkit
 
 ```svelte
 <script>
-  import { WalletKit, WalletButton } from '@shelchin/walletkit';
-  
-  const config = {
-    projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // WalletConnect 必需
-    networks: [1, 137, 42161], // 以太坊、Polygon、Arbitrum
-    theme: 'auto', // 'light' | 'dark' | 'auto'
-    locale: 'zh' // 'en' | 'zh'
-  };
+	import { WalletKit, WalletButton } from '@shelchin/walletkit';
+
+	const config = {
+		projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // WalletConnect 必需
+		networks: [1, 137, 42161], // 以太坊、Polygon、Arbitrum
+		theme: 'auto', // 'light' | 'dark' | 'auto'
+		locale: 'zh' // 'en' | 'zh'
+	};
 </script>
 
 <WalletKit {config}>
-  <WalletButton />
+	<WalletButton />
 </WalletKit>
 ```
 
@@ -70,12 +70,12 @@ yarn add @shelchin/walletkit
 
 <script src="https://unpkg.com/@shelchin/walletkit/dist/standalone.js"></script>
 <script>
-  WalletKit.init({
-    containerId: 'wallet-container',
-    projectId: 'YOUR_WALLETCONNECT_PROJECT_ID',
-    theme: 'dark',
-    networks: [1, 137, 42161]
-  });
+	WalletKit.init({
+		containerId: 'wallet-container',
+		projectId: 'YOUR_WALLETCONNECT_PROJECT_ID',
+		theme: 'dark',
+		networks: [1, 137, 42161]
+	});
 </script>
 ```
 
@@ -85,39 +85,39 @@ yarn add @shelchin/walletkit
 
 ```typescript
 interface WalletKitConfig {
-  // WalletConnect 项目 ID（使用 WalletConnect 时必需）
-  projectId?: string;
-  
-  // 支持的网络（链 ID）
-  networks?: number[];
-  
-  // 自定义 RPC 端点
-  rpcUrls?: Record<number, string[]>;
-  
-  // 主题配置
-  theme?: 'light' | 'dark' | 'auto' | ThemeConfig;
-  
-  // 本地化
-  locale?: 'en' | 'zh' | LocaleConfig;
-  
-  // 钱包选项
-  wallets?: {
-    includeDefault?: boolean;
-    custom?: WalletConfig[];
-  };
-  
-  // 功能特性
-  features?: {
-    ensResolution?: boolean;
-    siwe?: boolean; // 使用以太坊登录
-    analytics?: boolean;
-  };
-  
-  // 自定义模态框选项
-  modal?: {
-    disableBackdropClick?: boolean;
-    showRecentTransactions?: boolean;
-  };
+	// WalletConnect 项目 ID（使用 WalletConnect 时必需）
+	projectId?: string;
+
+	// 支持的网络（链 ID）
+	networks?: number[];
+
+	// 自定义 RPC 端点
+	rpcUrls?: Record<number, string[]>;
+
+	// 主题配置
+	theme?: 'light' | 'dark' | 'auto' | ThemeConfig;
+
+	// 本地化
+	locale?: 'en' | 'zh' | LocaleConfig;
+
+	// 钱包选项
+	wallets?: {
+		includeDefault?: boolean;
+		custom?: WalletConfig[];
+	};
+
+	// 功能特性
+	features?: {
+		ensResolution?: boolean;
+		siwe?: boolean; // 使用以太坊登录
+		analytics?: boolean;
+	};
+
+	// 自定义模态框选项
+	modal?: {
+		disableBackdropClick?: boolean;
+		showRecentTransactions?: boolean;
+	};
 }
 ```
 
@@ -125,23 +125,23 @@ interface WalletKitConfig {
 
 ```javascript
 const customTheme = {
-  colors: {
-    primary: '#6366f1',
-    background: '#ffffff',
-    text: '#111827',
-    border: '#e5e7eb'
-  },
-  radius: {
-    button: '0.75rem',
-    modal: '1.5rem'
-  },
-  fonts: {
-    base: 'Inter, system-ui, sans-serif'
-  }
+	colors: {
+		primary: '#6366f1',
+		background: '#ffffff',
+		text: '#111827',
+		border: '#e5e7eb'
+	},
+	radius: {
+		button: '0.75rem',
+		modal: '1.5rem'
+	},
+	fonts: {
+		base: 'Inter, system-ui, sans-serif'
+	}
 };
 
 WalletKit.init({
-  theme: customTheme
+	theme: customTheme
 });
 ```
 
@@ -149,13 +149,13 @@ WalletKit.init({
 
 ```javascript
 const customNetworks = {
-  networks: [1, 137, 42161, 56], // 包含 BSC
-  rpcUrls: {
-    1: ['https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY'],
-    137: ['https://polygon-rpc.com'],
-    42161: ['https://arb1.arbitrum.io/rpc'],
-    56: ['https://bsc-dataseed.binance.org']
-  }
+	networks: [1, 137, 42161, 56], // 包含 BSC
+	rpcUrls: {
+		1: ['https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY'],
+		137: ['https://polygon-rpc.com'],
+		42161: ['https://arb1.arbitrum.io/rpc'],
+		56: ['https://bsc-dataseed.binance.org']
+	}
 };
 ```
 
@@ -183,10 +183,10 @@ WalletKit 完全优化了移动设备体验：
 import { createTheme } from '@shelchin/walletkit';
 
 const myTheme = createTheme({
-  primary: '#8b5cf6',
-  secondary: '#ec4899',
-  borderRadius: 'lg',
-  fontFamily: 'Roboto, sans-serif'
+	primary: '#8b5cf6',
+	secondary: '#ec4899',
+	borderRadius: 'lg',
+	fontFamily: 'Roboto, sans-serif'
 });
 ```
 
@@ -201,15 +201,15 @@ const myTheme = createTheme({
 
 ```javascript
 const customLocale = {
-  connect: '连接钱包',
-  disconnect: '断开连接',
-  switchNetwork: '切换网络',
-  copyAddress: '复制地址',
-  // ... 更多翻译
+	connect: '连接钱包',
+	disconnect: '断开连接',
+	switchNetwork: '切换网络',
+	copyAddress: '复制地址'
+	// ... 更多翻译
 };
 
 WalletKit.init({
-  locale: customLocale
+	locale: customLocale
 });
 ```
 
@@ -245,29 +245,24 @@ WalletKit.sendTransaction(tx: TransactionRequest): Promise<string>
 ```javascript
 // 账户变更
 WalletKit.onAccountChange((account) => {
-  console.log('账户已变更:', account);
+	console.log('账户已变更:', account);
 });
 
 // 网络变更
 WalletKit.onChainChange((chainId) => {
-  console.log('网络已变更:', chainId);
+	console.log('网络已变更:', chainId);
 });
 
 // 连接状态
 WalletKit.onConnectionChange((connected) => {
-  console.log('连接状态:', connected);
+	console.log('连接状态:', connected);
 });
 ```
 
 ### Svelte Stores
 
 ```javascript
-import { 
-  account, 
-  chainId, 
-  connected, 
-  connecting 
-} from '@shelchin/walletkit';
+import { account, chainId, connected, connecting } from '@shelchin/walletkit';
 
 // 在 Svelte 组件中使用
 $: currentAccount = $account;
@@ -328,6 +323,7 @@ pnpm check
 ## 📋 功能路线图
 
 ### 已完成 ✅
+
 - [x] 基础钱包连接（MetaMask）
 - [x] 网络切换
 - [x] 账户管理
@@ -336,6 +332,7 @@ pnpm check
 - [x] TypeScript 支持
 
 ### 进行中 🚧
+
 - [ ] WalletConnect 集成
 - [ ] 多钱包支持
 - [ ] RPC 负载均衡
@@ -343,6 +340,7 @@ pnpm check
 - [ ] 移动端优化
 
 ### 计划中 📅
+
 - [ ] SIWE（使用以太坊登录）
 - [ ] ENS 解析
 - [ ] 交易管理
