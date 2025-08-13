@@ -57,12 +57,12 @@ export class NetworkManager {
 					// 如果不是预设网络，或者是预设网络但已被修改，则保存
 					return !preset || JSON.stringify(preset) !== JSON.stringify(network);
 				});
-				
+
 				console.log('Networks to save:', customNetworks);
 				console.log('Storage key:', this.storageKey);
-				
+
 				localStorage.setItem(this.storageKey, JSON.stringify(customNetworks));
-				
+
 				// 验证保存
 				const saved = localStorage.getItem(this.storageKey);
 				console.log('Verified saved data:', saved);

@@ -50,7 +50,7 @@
 	let isValidating = $state(false);
 	let isSaving = $state(false);
 	let rpcValidationStates = $state<Record<string, RpcValidationState>>({});
-	
+
 	// 搜索和分页状态
 	let searchQuery = $state('');
 	let currentPage = $state(1);
@@ -308,7 +308,9 @@
 			return;
 		}
 
-		if (confirm(`Are you sure you want to delete "${network.name}"?\n\nThis action cannot be undone.`)) {
+		if (
+			confirm(`Are you sure you want to delete "${network.name}"?\n\nThis action cannot be undone.`)
+		) {
 			try {
 				networkStore.removeNetwork(network.chainId);
 			} catch (error) {
