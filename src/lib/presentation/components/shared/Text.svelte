@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	
+
 	type Variant = 'body' | 'body-small' | 'caption' | 'label' | 'muted';
 
 	interface Props {

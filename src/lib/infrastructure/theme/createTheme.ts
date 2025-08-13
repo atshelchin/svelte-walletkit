@@ -210,13 +210,13 @@ export function createTheme(config: SimpleThemeConfig = {}): Partial<WalletKitTh
 			buttonGhost: 'transparent',
 			buttonGhostHover: 'rgba(0, 0, 0, 0.05)',
 			buttonGhostText: '#6b7280',
-			
+
 			modalBackground: '#ffffff',
 			dropdownBackground: '#ffffff',
 			inputBackground: '#ffffff',
 			buttonBackground: primaryVariations.base,
 			buttonText: '#ffffff',
-			
+
 			hover: '#f3f4f6',
 			active: '#e5e7eb',
 			disabled: '#9ca3af'

@@ -279,8 +279,8 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 
 {#if isOpen}
 	<!-- Backdrop -->
-	<div 
-		class="fixed inset-0 z-50 bg-black/60 backdrop-blur" 
+	<div
+		class="fixed inset-0 z-50 bg-black/60 backdrop-blur"
 		onclick={onClose}
 		onkeydown={(e) => e.key === 'Escape' && onClose?.()}
 		role="button"
@@ -322,7 +322,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 
 		<!-- Tabs -->
 		<div class="flex border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
-			{#each (['colors', 'typography', 'spacing', 'effects'] as const) as tab (tab)}
+			{#each ['colors', 'typography', 'spacing', 'effects'] as const as tab (tab)}
 				<button
 					onclick={() => (activeTab = tab as typeof activeTab)}
 					class="flex-1 px-4 py-3 text-sm font-medium transition-colors {activeTab === tab
@@ -401,7 +401,9 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 					<h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Font Sizes</h3>
 					{#each Object.entries(customTheme.fontSizes || {}) as [key, value] (key)}
 						<div class="flex items-center justify-between">
-							<label for="fontSize-{key}" class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
+							<label for="fontSize-{key}" class="text-sm text-gray-600 dark:text-gray-400"
+								>{key}</label
+							>
 							<input
 								id="fontSize-{key}"
 								type="text"
@@ -422,7 +424,9 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 					<h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Spacing Scale</h3>
 					{#each Object.entries(customTheme.spacing || {}) as [key, value] (key)}
 						<div class="flex items-center justify-between">
-							<label for="spacing-{key}" class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
+							<label for="spacing-{key}" class="text-sm text-gray-600 dark:text-gray-400"
+								>{key}</label
+							>
 							<div class="flex items-center gap-2">
 								<div class="bg-indigo-500" style="width: {value}; height: 1rem;"></div>
 								<input
@@ -444,7 +448,9 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 					<h3 class="mt-6 text-sm font-medium text-gray-700 dark:text-gray-300">Border Radius</h3>
 					{#each Object.entries(customTheme.radius || {}) as [key, value] (key)}
 						<div class="flex items-center justify-between">
-							<label for="radius-{key}" class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
+							<label for="radius-{key}" class="text-sm text-gray-600 dark:text-gray-400"
+								>{key}</label
+							>
 							<div class="flex items-center gap-2">
 								<div class="h-8 w-8 bg-indigo-500" style="border-radius: {value};"></div>
 								<input
@@ -468,7 +474,9 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 					<h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Shadows</h3>
 					{#each Object.entries(customTheme.shadows || {}) as [key, value] (key)}
 						<div class="space-y-2">
-							<label for="shadow-{key}" class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
+							<label for="shadow-{key}" class="text-sm text-gray-600 dark:text-gray-400"
+								>{key}</label
+							>
 							<div
 								class="h-12 w-full rounded-lg bg-white dark:bg-gray-800"
 								style="box-shadow: {value};"

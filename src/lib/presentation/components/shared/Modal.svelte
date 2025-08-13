@@ -57,7 +57,15 @@
 </script>
 
 {#if isOpen}
-	<div class="wk-modal-overlay" onclick={onClose} onkeydown={(e) => e.key === 'Escape' && onClose()} role="button" tabindex="-1" aria-label="Close modal" transition:fade={{ duration: 200 }}>
+	<div
+		class="wk-modal-overlay"
+		onclick={onClose}
+		onkeydown={(e) => e.key === 'Escape' && onClose()}
+		role="button"
+		tabindex="-1"
+		aria-label="Close modal"
+		transition:fade={{ duration: 200 }}
+	>
 		<div
 			class="wk-modal-content wk-modal-{maxWidth} {isMobile && mobileBottomSheet
 				? 'wk-modal-bottom-sheet'

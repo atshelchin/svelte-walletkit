@@ -40,13 +40,13 @@ export class MetaMaskConnector implements IWalletPort {
 		}
 
 		try {
-			const accounts = await this.ethereum.request({
+			const accounts = (await this.ethereum.request({
 				method: 'eth_requestAccounts'
-			}) as string[];
+			})) as string[];
 
-			const chainId = await this.ethereum.request({
+			const chainId = (await this.ethereum.request({
 				method: 'eth_chainId'
-			}) as string;
+			})) as string;
 
 			return {
 				address: accounts[0],
@@ -73,9 +73,9 @@ export class MetaMaskConnector implements IWalletPort {
 		}
 
 		try {
-			const accounts = await this.ethereum.request({
+			const accounts = (await this.ethereum.request({
 				method: 'eth_accounts'
-			}) as string[];
+			})) as string[];
 
 			return accounts.length > 0 ? new Address(accounts[0]) : null;
 		} catch {
@@ -92,9 +92,9 @@ export class MetaMaskConnector implements IWalletPort {
 			throw new Error('MetaMask is not available');
 		}
 
-		const chainId = await this.ethereum.request({
+		const chainId = (await this.ethereum.request({
 			method: 'eth_chainId'
-		}) as string;
+		})) as string;
 
 		return new ChainId(parseInt(chainId, 16));
 	}
@@ -136,10 +136,10 @@ export class MetaMaskConnector implements IWalletPort {
 			throw new Error('MetaMask is not available');
 		}
 
-		return await this.ethereum.request({
+		return (await this.ethereum.request({
 			method: 'personal_sign',
 			params: [message, account.toString()]
-		}) as string;
+		})) as string;
 	}
 
 	async sendTransaction(tx: TransactionRequest): Promise<string> {
@@ -151,10 +151,10 @@ export class MetaMaskConnector implements IWalletPort {
 			throw new Error('MetaMask is not available');
 		}
 
-		return await this.ethereum.request({
+		return (await this.ethereum.request({
 			method: 'eth_sendTransaction',
 			params: [tx]
-		}) as string;
+		})) as string;
 	}
 
 	onAccountChange(callback: (account: Address | null) => void): () => void {

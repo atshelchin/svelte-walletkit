@@ -379,7 +379,10 @@
 
 					<div class="grid grid-cols-2 gap-4">
 						<div>
-							<label for="chainId" class="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-400">
+							<label
+								for="chainId"
+								class="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-400"
+							>
 								Chain ID
 							</label>
 							<input
@@ -396,7 +399,10 @@
 						</div>
 
 						<div>
-							<label for="networkName" class="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-400">
+							<label
+								for="networkName"
+								class="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-400"
+							>
 								Network Name
 							</label>
 							<input
@@ -733,4 +739,3 @@
 		{/if}
 	</div>
 </ModalWrapper>
-
