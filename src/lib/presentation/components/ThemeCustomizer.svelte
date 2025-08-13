@@ -375,7 +375,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 									{value}
 									oninput={(e) => {
 										if (customTheme.colors) {
-											(customTheme.colors as any)[key] = e.currentTarget.value;
+											(customTheme.colors as Record<string, string>)[key] = e.currentTarget.value;
 											applyTheme();
 										}
 									}}
@@ -386,7 +386,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 									{value}
 									oninput={(e) => {
 										if (customTheme.colors) {
-											(customTheme.colors as any)[key] = e.currentTarget.value;
+											(customTheme.colors as Record<string, string>)[key] = e.currentTarget.value;
 											applyTheme();
 										}
 									}}
@@ -410,7 +410,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 								{value}
 								oninput={(e) => {
 									if (customTheme.fontSizes) {
-										(customTheme.fontSizes as any)[key] = e.currentTarget.value;
+										(customTheme.fontSizes as Record<string, string>)[key] = e.currentTarget.value;
 										applyTheme();
 									}
 								}}
@@ -435,7 +435,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 									{value}
 									oninput={(e) => {
 										if (customTheme.spacing) {
-											(customTheme.spacing as any)[key] = e.currentTarget.value;
+											(customTheme.spacing as Record<string, string>)[key] = e.currentTarget.value;
 											applyTheme();
 										}
 									}}
@@ -459,7 +459,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 									{value}
 									oninput={(e) => {
 										if (customTheme.radius) {
-											(customTheme.radius as any)[key] = e.currentTarget.value;
+											(customTheme.radius as Record<string, string>)[key] = e.currentTarget.value;
 											applyTheme();
 										}
 									}}
@@ -487,7 +487,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 								{value}
 								oninput={(e) => {
 									if (customTheme.shadows) {
-										(customTheme.shadows as any)[key] = e.currentTarget.value;
+										(customTheme.shadows as Record<string, string>)[key] = e.currentTarget.value;
 										applyTheme();
 									}
 								}}
