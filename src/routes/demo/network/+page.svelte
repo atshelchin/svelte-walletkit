@@ -1,6 +1,5 @@
 <script lang="ts">
 	import NetworkSelector from '$lib/presentation/components/NetworkSelector.svelte';
-	import NetworkManagerV2 from '$lib/presentation/components/NetworkManagerV2.svelte';
 	import { networkStore } from '$lib/presentation/stores/networkStore.svelte';
 	import {
 		Network,
@@ -305,7 +304,7 @@
 						<div class="mb-2 flex items-center gap-2">
 							<Shield class="h-5 w-5 text-purple-500" />
 							<div class="text-3xl font-bold text-slate-900 dark:text-white">
-								{networks.filter((n) => networkStore.isCustomNetwork(n.chainId)).length}
+								{networks.filter((n) => !networkStore.isPresetNetwork(n.chainId)).length}
 							</div>
 						</div>
 						<div class="text-sm font-medium text-slate-600 dark:text-slate-400">

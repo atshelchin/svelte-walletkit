@@ -76,7 +76,7 @@ class NetworkStore {
 
 		try {
 			await this.manager.addNetwork(network);
-		} catch (error) {
+		} catch {
 			this.state.error = error instanceof Error ? error.message : 'Failed to add network';
 			throw error;
 		} finally {
@@ -101,7 +101,7 @@ class NetworkStore {
 
 		try {
 			await this.manager.updateNetwork(chainId, updates, skipFullValidation);
-		} catch (error) {
+		} catch {
 			this.state.error = error instanceof Error ? error.message : 'Failed to update network';
 			throw error;
 		} finally {
@@ -121,7 +121,7 @@ class NetworkStore {
 
 		try {
 			this.manager.removeNetwork(chainId);
-		} catch (error) {
+		} catch {
 			this.state.error = error instanceof Error ? error.message : 'Failed to remove network';
 			throw error;
 		}
@@ -140,7 +140,7 @@ class NetworkStore {
 			this.state.error = null;
 			try {
 				await this.manager.switchNetwork(chainId, true);
-			} catch (error) {
+			} catch {
 				this.state.error = error instanceof Error ? error.message : 'Failed to switch network';
 				throw error;
 			}
@@ -151,7 +151,7 @@ class NetworkStore {
 
 			try {
 				await this.manager.switchNetwork(chainId, false);
-			} catch (error) {
+			} catch {
 				this.state.error = error instanceof Error ? error.message : 'Failed to switch network';
 				throw error;
 			} finally {
@@ -200,7 +200,7 @@ class NetworkStore {
 
 		try {
 			this.manager.resetToPresetNetworks();
-		} catch (error) {
+		} catch {
 			this.state.error = error instanceof Error ? error.message : 'Failed to reset networks';
 			throw error;
 		}

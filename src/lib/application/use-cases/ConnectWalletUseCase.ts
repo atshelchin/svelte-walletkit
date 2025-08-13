@@ -45,7 +45,7 @@ export class ConnectWalletUseCase {
 			this.setupEventListeners();
 
 			return wallet;
-		} catch (error) {
+		} catch {
 			const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 			throw new Error(`Failed to connect wallet: ${errorMessage}`);
 		}

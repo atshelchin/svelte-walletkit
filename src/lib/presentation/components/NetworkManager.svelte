@@ -7,23 +7,17 @@
 	import {
 		X,
 		Plus,
-		Edit,
+		Pencil,
 		Trash2,
 		Save,
-		AlertTriangle,
-		Loader,
 		RefreshCw,
-		CheckCircle2,
 		XCircle,
-		Globe,
 		Circle,
+		CheckCircle,
 		Network,
 		Server,
 		Coins,
-		Search as SearchIcon,
-		ChevronLeft,
-		ChevronRight,
-		Check
+		Search
 	} from '@lucide/svelte';
 
 	interface Props {
@@ -51,12 +45,12 @@
 	let isSaving = $state(false);
 	let rpcValidationStates = $state<Record<string, RpcValidationState>>({});
 
-	// 搜索和分页状态
-	let searchQuery = $state('');
-	let currentPage = $state(1);
-	let itemsPerPage = $state(10);
-	let saveSuccess = $state(false);
-	let saveError = $state('');
+	// 搜索和分页状态 - 暂时未使用
+	// let searchQuery = $state('');
+	// let currentPage = $state(1);
+	// let itemsPerPage = $state(10);
+	// let saveSuccess = $state(false);
+	// let saveError = $state('');
 
 	// 获取网络状态
 	const networks = $derived(networkStore.state.networks);
@@ -178,7 +172,7 @@
 				delete errors[`rpc_${url}`];
 				validationErrors = errors;
 			}
-		} catch (error) {
+		} catch {
 			rpcValidationStates = {
 				...rpcValidationStates,
 				[url]: {
@@ -291,7 +285,7 @@
 			}
 
 			cancelEdit();
-		} catch (error) {
+		} catch {
 			validationErrors = {
 				save: error instanceof Error ? error.message : 'Failed to save network'
 			};
@@ -313,7 +307,7 @@
 		) {
 			try {
 				networkStore.removeNetwork(network.chainId);
-			} catch (error) {
+			} catch {
 				alert(error instanceof Error ? error.message : 'Failed to delete network');
 			}
 		}
@@ -716,7 +710,7 @@
 									onclick={() => startEditNetwork(network)}
 									class="rounded-lg p-2 text-slate-500 transition-all hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
 								>
-									<Edit2 class="h-4 w-4" />
+									<Pencil class="h-4 w-4" />
 								</button>
 								{#if networkStore.canDeleteNetwork(network.chainId)}
 									<button

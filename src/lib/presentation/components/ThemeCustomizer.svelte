@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { themeManager } from '$lib/infrastructure/theme/ThemeManager.js';
-	import { Palette, Sun, Moon, Settings, Download, Upload, Eye, Code } from '@lucide/svelte';
+	import { Palette, Sun, Moon, Download, Upload, Code } from '@lucide/svelte';
 	import type { WalletKitTheme } from '$lib/domain/types/ThemeTypes.js';
 
 	interface Props {
@@ -176,7 +175,7 @@
 						customTheme = { ...customTheme, ...config.theme };
 						applyTheme();
 					}
-				} catch (error) {
+				} catch {
 					console.error('Failed to import theme:', error);
 				}
 			};
@@ -222,25 +221,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 	}
 
 	// Live preview components
-	function PreviewButton() {
-		return `
-			<button style="
-				background: ${customTheme.colors?.primary};
-				color: white;
-				padding: ${customTheme.spacing?.sm} ${customTheme.spacing?.md};
-				border-radius: ${customTheme.radius?.button};
-				border: none;
-				cursor: pointer;
-				font-family: inherit;
-				font-size: 0.875rem;
-				font-weight: 500;
-				box-shadow: ${customTheme.shadows?.sm};
-				transition: all 0.2s;
-			">
-				Connect Wallet
-			</button>
-		`;
-	}
+	// Removed unused PreviewButton function - functionality is now inline in the template
 </script>
 
 {#if isOpen}
@@ -281,7 +262,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 
 		<!-- Tabs -->
 		<div class="flex border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
-			{#each ['colors', 'typography', 'spacing', 'effects'] as tab}
+			{#each ['colors', 'typography', 'spacing', 'effects'] as tab (tab)}
 				<button
 					onclick={() => (activeTab = tab)}
 					class="flex-1 px-4 py-3 text-sm font-medium transition-colors {activeTab === tab
@@ -300,7 +281,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 				<div class="mb-6">
 					<h3 class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">Preset Themes</h3>
 					<div class="grid grid-cols-3 gap-2">
-						{#each presetThemes as preset}
+						{#each presetThemes as preset (preset.name)}
 							<button
 								onclick={() => applyPreset(preset)}
 								class="group relative overflow-hidden rounded-lg border border-gray-200 p-3 transition-all hover:shadow-md dark:border-gray-700"
@@ -322,7 +303,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 				<div class="space-y-4">
 					<h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Brand Colors</h3>
 
-					{#each Object.entries(customTheme.colors || {}).slice(0, 6) as [key, value]}
+					{#each Object.entries(customTheme.colors || {}).slice(0, 6) as [key, value] (key)}
 						<div class="flex items-center justify-between">
 							<label class="text-sm text-gray-600 dark:text-gray-400">
 								{key.replace(/([A-Z])/g, ' $1').trim()}
@@ -357,7 +338,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 			{:else if activeTab === 'typography'}
 				<div class="space-y-4">
 					<h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Font Sizes</h3>
-					{#each Object.entries(customTheme.fontSizes || {}) as [key, value]}
+					{#each Object.entries(customTheme.fontSizes || {}) as [key, value] (key)}
 						<div class="flex items-center justify-between">
 							<label class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
 							<input
@@ -377,7 +358,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 			{:else if activeTab === 'spacing'}
 				<div class="space-y-4">
 					<h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Spacing Scale</h3>
-					{#each Object.entries(customTheme.spacing || {}) as [key, value]}
+					{#each Object.entries(customTheme.spacing || {}) as [key, value] (key)}
 						<div class="flex items-center justify-between">
 							<label class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
 							<div class="flex items-center gap-2">
@@ -398,7 +379,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 					{/each}
 
 					<h3 class="mt-6 text-sm font-medium text-gray-700 dark:text-gray-300">Border Radius</h3>
-					{#each Object.entries(customTheme.radius || {}) as [key, value]}
+					{#each Object.entries(customTheme.radius || {}) as [key, value] (key)}
 						<div class="flex items-center justify-between">
 							<label class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
 							<div class="flex items-center gap-2">
@@ -421,7 +402,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 			{:else if activeTab === 'effects'}
 				<div class="space-y-4">
 					<h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Shadows</h3>
-					{#each Object.entries(customTheme.shadows || {}) as [key, value]}
+					{#each Object.entries(customTheme.shadows || {}) as [key, value] (key)}
 						<div class="space-y-2">
 							<label class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
 							<div

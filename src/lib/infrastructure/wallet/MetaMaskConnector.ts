@@ -46,7 +46,7 @@ export class MetaMaskConnector implements IWalletPort {
 				chainId: parseInt(chainId, 16),
 				provider: 'metamask'
 			};
-		} catch (error) {
+		} catch {
 			throw new Error(`Failed to connect MetaMask: ${error}`);
 		}
 	}
@@ -69,7 +69,7 @@ export class MetaMaskConnector implements IWalletPort {
 			});
 
 			return accounts.length > 0 ? new Address(accounts[0]) : null;
-		} catch (error) {
+		} catch {
 			return null;
 		}
 	}
@@ -96,7 +96,7 @@ export class MetaMaskConnector implements IWalletPort {
 				method: 'wallet_switchEthereumChain',
 				params: [{ chainId: chainId.toHex() }]
 			});
-		} catch (error) {
+		} catch {
 			// 如果网络未添加，可能需要添加网络
 			if (error.code === 4902) {
 				throw new Error('Network not added to MetaMask');

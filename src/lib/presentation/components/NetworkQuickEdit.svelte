@@ -73,7 +73,7 @@
 					isValidating: false
 				}
 			};
-		} catch (error) {
+		} catch {
 			rpcValidationResults = {
 				...rpcValidationResults,
 				[simpleFormData.rpcUrl]: {
@@ -110,7 +110,7 @@
 					isValidating: false
 				}
 			};
-		} catch (error) {
+		} catch {
 			rpcValidationResults = {
 				...rpcValidationResults,
 				[url]: {
@@ -251,7 +251,7 @@
 			const skipFullValidation = !enableRpcLoadBalancing;
 			await networkStore.updateNetwork(network.chainId, updates, skipFullValidation);
 			onClose();
-		} catch (error) {
+		} catch {
 			console.error('Failed to save network:', error);
 		} finally {
 			isSaving = false;

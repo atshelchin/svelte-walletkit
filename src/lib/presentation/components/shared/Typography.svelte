@@ -20,59 +20,65 @@
 		label: 'text-sm font-medium text-slate-700 dark:text-slate-300'
 	};
 
+	interface ComponentProps {
+		class?: string;
+		children?: unknown;
+		[key: string]: unknown;
+	}
+
 	// H1 - Page titles
-	export function H1({ class: className = '', children, ...props }: any) {
+	export function H1({ class: className = '', children, ...props }: ComponentProps) {
 		const styles = `${headingStyles.h1} ${className}`.trim();
 		return { as: 'h1', class: styles, children, ...props };
 	}
 
 	// H2 - Section titles
-	export function H2({ class: className = '', children, ...props }: any) {
+	export function H2({ class: className = '', children, ...props }: ComponentProps) {
 		const styles = `${headingStyles.h2} ${className}`.trim();
 		return { as: 'h2', class: styles, children, ...props };
 	}
 
 	// H3 - Subsection titles
-	export function H3({ class: className = '', children, ...props }: any) {
+	export function H3({ class: className = '', children, ...props }: ComponentProps) {
 		const styles = `${headingStyles.h3} ${className}`.trim();
 		return { as: 'h3', class: styles, children, ...props };
 	}
 
 	// H4 - Card titles
-	export function H4({ class: className = '', children, ...props }: any) {
+	export function H4({ class: className = '', children, ...props }: ComponentProps) {
 		const styles = `${headingStyles.h4} ${className}`.trim();
 		return { as: 'h4', class: styles, children, ...props };
 	}
 
 	// H5 - Small headings
-	export function H5({ class: className = '', children, ...props }: any) {
+	export function H5({ class: className = '', children, ...props }: ComponentProps) {
 		const styles = `${headingStyles.h5} ${className}`.trim();
 		return { as: 'h5', class: styles, children, ...props };
 	}
 
 	// H6 - Smallest headings
-	export function H6({ class: className = '', children, ...props }: any) {
+	export function H6({ class: className = '', children, ...props }: ComponentProps) {
 		const styles = `${headingStyles.h6} ${className}`.trim();
 		return { as: 'h6', class: styles, children, ...props };
 	}
 
 	// Text Components
-	export function Body({ class: className = '', children, ...props }: any) {
+	export function Body({ class: className = '', children, ...props }: ComponentProps) {
 		const styles = `${textStyles.body} ${className}`.trim();
 		return { as: 'p', class: styles, children, ...props };
 	}
 
-	export function BodySmall({ class: className = '', children, ...props }: any) {
+	export function BodySmall({ class: className = '', children, ...props }: ComponentProps) {
 		const styles = `${textStyles['body-small']} ${className}`.trim();
 		return { as: 'p', class: styles, children, ...props };
 	}
 
-	export function Caption({ class: className = '', children, ...props }: any) {
+	export function Caption({ class: className = '', children, ...props }: ComponentProps) {
 		const styles = `${textStyles.caption} ${className}`.trim();
 		return { as: 'span', class: styles, children, ...props };
 	}
 
-	export function Label({ class: className = '', children, ...props }: any) {
+	export function Label({ class: className = '', children, ...props }: ComponentProps) {
 		const styles = `${textStyles.label} ${className}`.trim();
 		return { as: 'label', class: styles, children, ...props };
 	}
@@ -82,13 +88,13 @@
 	interface HeadingProps {
 		level?: HeadingLevel;
 		class?: string;
-		children?: any;
+		children?: unknown;
 	}
 
 	interface TextProps {
 		variant?: TextVariant;
 		class?: string;
-		children?: any;
+		children?: unknown;
 	}
 
 	export function Heading(props: HeadingProps) {

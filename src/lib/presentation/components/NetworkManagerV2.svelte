@@ -9,11 +9,9 @@
 		Plus,
 		Trash2,
 		Save,
-		AlertCircle,
 		Loader,
 		RefreshCw,
 		CheckCircle,
-		CircleCheck,
 		CircleX,
 		Circle,
 		Network,
@@ -62,8 +60,8 @@
 	let sortOrder = $state<'asc' | 'desc'>('asc');
 
 	// 反馈状态
-	let saveSuccess = $state(false);
-	let saveMessage = $state('');
+	// let saveSuccess = $state(false);
+	// let saveMessage = $state('');
 	let showSuccessToast = $state(false);
 	let toastMessage = $state('');
 	let toastType = $state<'success' | 'error' | 'info'>('success');
@@ -158,7 +156,9 @@
 
 	// 重置到第一页当搜索查询改变
 	$effect(() => {
-		searchQuery;
+		if (searchQuery) {
+			currentPage = 1;
+		}
 		currentPage = 1;
 	});
 
@@ -309,7 +309,7 @@
 				delete errors[`rpc_${url}`];
 				validationErrors = errors;
 			}
-		} catch (error) {
+		} catch {
 			rpcValidationStates = {
 				...rpcValidationStates,
 				[url]: {
@@ -446,7 +446,7 @@
 			setTimeout(() => {
 				cancelEdit();
 			}, 1200);
-		} catch (error) {
+		} catch {
 			saveError = error instanceof Error ? error.message : 'Failed to save network';
 			saveStatus = 'error';
 			isSaving = false;
@@ -478,7 +478,7 @@
 			try {
 				networkStore.removeNetwork(network.chainId);
 				showToast(`🗑️ ${network.name} deleted successfully`, 'success');
-			} catch (error) {
+			} catch {
 				showToast(error instanceof Error ? error.message : 'Failed to delete network', 'error');
 			}
 		}
@@ -1099,7 +1099,7 @@
 						</button>
 
 						<div class="flex items-center gap-1">
-							{#each pageNumbers() as page}
+							{#each pageNumbers() as page (page)}
 								<button
 									onclick={() => (currentPage = page)}
 									class="min-w-[1.75rem] rounded-lg px-2 py-1 text-xs font-medium transition-all {currentPage ===

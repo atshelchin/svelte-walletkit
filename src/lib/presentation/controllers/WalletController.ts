@@ -27,7 +27,7 @@ export class WalletController {
 		try {
 			this.currentWallet = await this.connectWalletUseCase.execute(provider);
 			return this.currentWallet;
-		} catch (error) {
+		} catch {
 			console.error('Failed to connect wallet:', error);
 			throw error;
 		}

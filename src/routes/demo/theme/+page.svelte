@@ -1,10 +1,6 @@
 <script lang="ts">
 	import { ThemeCustomizer } from '$lib/presentation/components/ThemeCustomizer.svelte';
-	import {
-		createTheme,
-		presetThemes,
-		exportThemeToCSS
-	} from '$lib/infrastructure/theme/createTheme.js';
+	import { presetThemes, exportThemeToCSS } from '$lib/infrastructure/theme/createTheme.js';
 	import Button from '$lib/presentation/components/shared/Button.svelte';
 	import Card from '$lib/presentation/components/shared/Card.svelte';
 	import Input from '$lib/presentation/components/shared/Input.svelte';
@@ -136,7 +132,7 @@
 			</p>
 
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-				{#each Object.keys(presetThemes) as preset}
+				{#each Object.keys(presetThemes) as preset (preset)}
 					<button
 						onclick={() => applyPreset(preset)}
 						class="group relative overflow-hidden rounded-2xl border-2 p-6 text-left transition-all {selectedPreset ===

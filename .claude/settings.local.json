@@ -12,7 +12,12 @@
       "Bash(npm run dev:*)",
       "Bash(open http://localhost:5173/demo/network)",
       "Bash(curl:*)",
-      "Bash(open http://localhost:5180/demo/network)"
+      "Bash(open http://localhost:5180/demo/network)",
+      "Bash(git add:*)",
+      "Bash(chmod:*)",
+      "Bash(./fix-lint.sh)",
+      "Bash(rm:*)",
+      "Bash(pnpm test:unit:*)"
     ],
     "deny": []
   }
