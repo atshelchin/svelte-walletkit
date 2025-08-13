@@ -1,11 +1,14 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+	
 	interface Props {
 		isOpen?: boolean;
 		onClose?: () => void;
 		zIndex?: number;
+		children?: Snippet;
 	}
 
-	let { isOpen = false, onClose, zIndex = 50 }: Props = $props();
+	let { isOpen = false, onClose, zIndex = 50, children }: Props = $props();
 </script>
 
 {#if isOpen}
@@ -21,6 +24,8 @@
 
 	<!-- 内容容器 -->
 	<div class="fixed inset-0 flex items-center justify-center p-4" style="z-index: {zIndex}">
-		<slot />
+		{#if children}
+			{@render children()}
+		{/if}
 	</div>
 {/if}

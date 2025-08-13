@@ -212,6 +212,10 @@
 			<div
 				class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
 				onclick={() => (isOpen = false)}
+				onkeydown={(e) => e.key === 'Escape' && (isOpen = false)}
+				role="button"
+				tabindex="-1"
+				aria-label="Close network selector"
 			></div>
 			<div
 				class="fixed right-0 bottom-0 left-0 z-50 rounded-t-2xl bg-white shadow-xl dark:bg-slate-900"

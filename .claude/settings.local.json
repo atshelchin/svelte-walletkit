@@ -1,24 +1,25 @@
 {
-	"permissions": {
-		"allow": [
-			"Bash(npm run build:widget:*)",
-			"Bash(pnpm add:*)",
-			"Bash(pnpm check:*)",
-			"Bash(pnpm lint:*)",
-			"Bash(pnpm format:*)",
-			"WebFetch(domain:github.com)",
-			"WebFetch(domain:raw.githubusercontent.com)",
-			"WebFetch(domain:api.github.com)",
-			"Bash(npm run dev:*)",
-			"Bash(open http://localhost:5173/demo/network)",
-			"Bash(curl:*)",
-			"Bash(open http://localhost:5180/demo/network)",
-			"Bash(git add:*)",
-			"Bash(chmod:*)",
-			"Bash(./fix-lint.sh)",
-			"Bash(rm:*)",
-			"Bash(pnpm test:unit:*)"
-		],
-		"deny": []
-	}
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:widget:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm check:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm format:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(npm run dev:*)",
+      "Bash(open http://localhost:5173/demo/network)",
+      "Bash(curl:*)",
+      "Bash(open http://localhost:5180/demo/network)",
+      "Bash(git add:*)",
+      "Bash(chmod:*)",
+      "Bash(./fix-lint.sh)",
+      "Bash(rm:*)",
+      "Bash(pnpm test:unit:*)",
+      "Bash(grep:*)"
+    ],
+    "deny": []
+  }
 }

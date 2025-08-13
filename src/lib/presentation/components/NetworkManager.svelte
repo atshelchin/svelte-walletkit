@@ -174,7 +174,7 @@
 				delete errors[`rpc_${url}`];
 				validationErrors = errors;
 			}
-		} catch (error) {
+		} catch {
 			rpcValidationStates = {
 				...rpcValidationStates,
 				[url]: {
@@ -379,10 +379,11 @@
 
 					<div class="grid grid-cols-2 gap-4">
 						<div>
-							<label class="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-400">
+							<label for="chainId" class="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-400">
 								Chain ID
 							</label>
 							<input
+								id="chainId"
 								type="number"
 								bind:value={formData.chainId}
 								disabled={!isAddingNew}
@@ -395,10 +396,11 @@
 						</div>
 
 						<div>
-							<label class="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-400">
+							<label for="networkName" class="mb-1.5 block text-xs font-medium text-slate-600 dark:text-slate-400">
 								Network Name
 							</label>
 							<input
+								id="networkName"
 								type="text"
 								bind:value={formData.name}
 								class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-all focus:border-slate-500 focus:ring-2 focus:ring-slate-500/20 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:focus:border-slate-400 dark:focus:ring-slate-400/20"
@@ -732,39 +734,3 @@
 	</div>
 </ModalWrapper>
 
-<style>
-	.hover-button:hover {
-		background-color: var(--wk-color-hover);
-	}
-
-	.hover-danger-button:hover {
-		background-color: var(--wk-color-error-light);
-		color: var(--wk-color-error);
-	}
-
-	.hover-error-button:hover {
-		background-color: var(--wk-color-error-light);
-	}
-
-	.hover-secondary-button:hover {
-		background-color: var(--wk-color-secondary-light);
-		opacity: 0.2;
-	}
-
-	.hover-primary-button:hover {
-		background-color: var(--wk-color-primary);
-		opacity: 0.1;
-	}
-
-	.input-field:focus {
-		outline: none;
-		border-color: var(--wk-color-border-focus);
-		box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-	}
-
-	.input-field:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-		background-color: var(--wk-color-background-tertiary);
-	}
-</style>

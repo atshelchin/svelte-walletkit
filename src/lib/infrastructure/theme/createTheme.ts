@@ -131,21 +131,21 @@ export function createTheme(config: SimpleThemeConfig = {}): Partial<WalletKitTh
 		small: {
 			xs: '0.7rem',
 			sm: '0.8rem',
-			md: '0.9rem',
+			base: '0.9rem',
 			lg: '1rem',
 			xl: '1.125rem'
 		},
 		normal: {
 			xs: '0.75rem',
 			sm: '0.875rem',
-			md: '1rem',
+			base: '1rem',
 			lg: '1.125rem',
 			xl: '1.25rem'
 		},
 		large: {
 			xs: '0.875rem',
 			sm: '1rem',
-			md: '1.125rem',
+			base: '1.125rem',
 			lg: '1.25rem',
 			xl: '1.5rem'
 		}
@@ -157,6 +157,8 @@ export function createTheme(config: SimpleThemeConfig = {}): Partial<WalletKitTh
 			primary: primaryVariations.base,
 			primaryDark: primaryVariations.dark,
 			primaryLight: primaryVariations.light,
+			primaryHover: adjustBrightness(primaryVariations.base, -10),
+			primaryActive: adjustBrightness(primaryVariations.base, -20),
 			secondary: secondaryVariations.base,
 			secondaryDark: secondaryVariations.dark,
 			secondaryLight: secondaryVariations.light,
@@ -169,12 +171,15 @@ export function createTheme(config: SimpleThemeConfig = {}): Partial<WalletKitTh
 			backgroundTertiary: config.light?.background
 				? adjustBrightness(config.light.background, -10)
 				: '#f3f4f6',
+			backgroundOverlay: 'rgba(0, 0, 0, 0.5)',
 
 			text: config.light?.text || '#111827',
 			textSecondary: config.light?.text ? adjustBrightness(config.light.text, 40) : '#6b7280',
 			textTertiary: config.light?.text ? adjustBrightness(config.light.text, 60) : '#9ca3af',
+			textInverse: '#ffffff',
 
 			border: config.light?.border || '#e5e7eb',
+			borderLight: config.light?.border ? adjustBrightness(config.light.border, 10) : '#f3f4f6',
 			borderFocus: primaryVariations.base,
 			borderHover: config.light?.border ? adjustBrightness(config.light.border, -10) : '#d1d5db',
 
@@ -204,24 +209,41 @@ export function createTheme(config: SimpleThemeConfig = {}): Partial<WalletKitTh
 
 			buttonGhost: 'transparent',
 			buttonGhostHover: 'rgba(0, 0, 0, 0.05)',
-			buttonGhostText: '#6b7280'
+			buttonGhostText: '#6b7280',
+			
+			modalBackground: '#ffffff',
+			dropdownBackground: '#ffffff',
+			inputBackground: '#ffffff',
+			buttonBackground: primaryVariations.base,
+			buttonText: '#ffffff',
+			
+			hover: '#f3f4f6',
+			active: '#e5e7eb',
+			disabled: '#9ca3af'
 		},
 		radius: {
+			none: '0',
+			sm: '0.25rem',
+			md: '0.5rem',
+			lg: '0.75rem',
+			xl: '1rem',
+			full: '9999px',
 			input: radius,
 			button: radius,
 			card: config.borderRadius === 'full' ? '1.5rem' : radius,
 			modal: config.borderRadius === 'none' ? '0' : '1.5rem',
-			tooltip: config.borderRadius === 'full' ? radius : '0.5rem',
-			badge: config.borderRadius === 'none' ? '0.25rem' : '9999px',
-			default: radius
+			dropdown: radius,
+			tooltip: config.borderRadius === 'full' ? radius : '0.5rem'
 		},
 		shadows: {
-			...shadows,
+			none: 'none',
+			sm: shadows.sm,
+			md: shadows.md,
+			lg: shadows.lg,
+			xl: shadows.xl,
 			modal: shadows.xl,
 			button: shadows.sm,
-			card: shadows.md,
-			dropdown: shadows.lg,
-			focus: `0 0 0 3px ${primaryVariations.light}40`
+			dropdown: shadows.lg
 		},
 		spacing: {
 			...spacing,
@@ -231,6 +253,7 @@ export function createTheme(config: SimpleThemeConfig = {}): Partial<WalletKitTh
 			modal: spacing.lg
 		},
 		fonts: {
+			base: config.fontFamily || 'system-ui, -apple-system, sans-serif',
 			body: config.fontFamily || 'system-ui, -apple-system, sans-serif',
 			heading: config.fontFamily || 'system-ui, -apple-system, sans-serif',
 			mono: 'ui-monospace, monospace'
@@ -238,6 +261,7 @@ export function createTheme(config: SimpleThemeConfig = {}): Partial<WalletKitTh
 		fontSizes,
 		transitions: {
 			fast: 'all 150ms ease-in-out',
+			base: 'all 250ms ease-in-out',
 			normal: 'all 250ms ease-in-out',
 			slow: 'all 350ms ease-in-out'
 		},

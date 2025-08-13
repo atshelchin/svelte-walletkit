@@ -1,12 +1,15 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+	
 	interface Props {
 		isOpen: boolean;
 		onClose?: () => void;
 		maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
 		class?: string;
+		children: Snippet;
 	}
 
-	let { isOpen, onClose, maxWidth = 'md', class: className = '' }: Props = $props();
+	let { isOpen, onClose, maxWidth = 'md', class: className = '', children }: Props = $props();
 
 	const maxWidthClasses = {
 		sm: 'max-w-sm',
@@ -50,10 +53,12 @@
 				maxWidth
 			]} rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200/50 dark:bg-slate-900 dark:ring-slate-700/50 {className}"
 			onclick={handleContentClick}
+			onkeydown={handleKeyDown}
 			role="dialog"
 			aria-modal="true"
+			tabindex="0"
 		>
-			<slot />
+			{@render children()}
 		</div>
 	</div>
 {/if}

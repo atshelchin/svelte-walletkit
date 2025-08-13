@@ -60,8 +60,8 @@
 	let sortOrder = $state<'asc' | 'desc'>('asc');
 
 	// 反馈状态
-	let saveSuccess = $state(false);
-	let saveMessage = $state('');
+	// let saveSuccess = $state(false);
+	// let saveMessage = $state('');
 	let showSuccessToast = $state(false);
 	let toastMessage = $state('');
 	let toastType = $state<'success' | 'error' | 'info'>('success');
@@ -198,8 +198,8 @@
 		formData = {};
 		validationErrors = {};
 		rpcValidationStates = {};
-		saveSuccess = false;
-		saveMessage = '';
+		// saveSuccess = false;
+		// saveMessage = '';
 		saveStatus = 'idle';
 		saveError = '';
 	}
@@ -309,7 +309,7 @@
 				delete errors[`rpc_${url}`];
 				validationErrors = errors;
 			}
-		} catch (error) {
+		} catch {
 			rpcValidationStates = {
 				...rpcValidationStates,
 				[url]: {

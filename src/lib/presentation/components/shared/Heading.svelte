@@ -1,12 +1,15 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+	
 	type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
 	interface Props {
 		level?: Level;
 		class?: string;
+		children: Snippet;
 	}
 
-	let { level = 2, class: className = '' }: Props = $props();
+	let { level = 2, class: className = '', children }: Props = $props();
 
 	// 统一的标题样式 - 暗色模式使用柔和的颜色
 	const styles = {
@@ -24,5 +27,5 @@
 </script>
 
 <svelte:element this={Tag} class={combinedClass}>
-	<slot />
+	{@render children()}
 </svelte:element>

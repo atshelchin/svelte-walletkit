@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Palette, Sun, Moon, Download, Upload, Code } from '@lucide/svelte';
+	import { Palette, Sun, Moon, Download, Upload, Code, X } from '@lucide/svelte';
 	import type { WalletKitTheme } from '$lib/domain/types/ThemeTypes.js';
 
 	interface Props {
@@ -16,27 +16,54 @@
 	let showCode = $state(false);
 
 	// Theme state
-	let customTheme = $state<Partial<WalletKitTheme>>({
+	let customTheme = $state<WalletKitTheme>({
 		colors: {
 			primary: '#6366f1',
 			primaryDark: '#4f46e5',
 			primaryLight: '#818cf8',
+			primaryHover: '#4f46e5',
+			primaryActive: '#4338ca',
 			secondary: '#8b5cf6',
 			background: '#ffffff',
 			backgroundSecondary: '#f9fafb',
+			backgroundTertiary: '#f3f4f6',
+			backgroundOverlay: 'rgba(0, 0, 0, 0.5)',
 			text: '#111827',
 			textSecondary: '#6b7280',
+			textTertiary: '#9ca3af',
+			textInverse: '#ffffff',
 			border: '#e5e7eb',
+			borderLight: '#f3f4f6',
+			borderFocus: '#6366f1',
 			success: '#10b981',
+			successLight: '#d1fae5',
 			error: '#ef4444',
+			errorLight: '#fee2e2',
 			warning: '#f59e0b',
-			info: '#3b82f6'
+			warningLight: '#fef3c7',
+			info: '#3b82f6',
+			infoLight: '#dbeafe',
+			modalBackground: '#ffffff',
+			dropdownBackground: '#ffffff',
+			inputBackground: '#ffffff',
+			buttonBackground: '#6366f1',
+			buttonText: '#ffffff',
+			hover: '#f3f4f6',
+			active: '#e5e7eb',
+			disabled: '#9ca3af'
 		},
 		radius: {
+			none: '0',
+			sm: '0.25rem',
+			md: '0.5rem',
+			lg: '0.75rem',
+			xl: '1rem',
+			full: '9999px',
 			button: '0.75rem',
 			input: '0.75rem',
 			card: '1rem',
-			modal: '1.5rem'
+			modal: '1.5rem',
+			dropdown: '0.5rem'
 		},
 		spacing: {
 			xs: '0.25rem',
@@ -46,10 +73,36 @@
 			xl: '2rem'
 		},
 		shadows: {
+			none: 'none',
 			sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
 			md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
 			lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-			xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+			xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+			dropdown: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+			modal: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+			button: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+		},
+		fonts: {
+			base: 'Inter, system-ui, sans-serif',
+			mono: 'ui-monospace, monospace'
+		},
+		fontSizes: {
+			xs: '0.75rem',
+			sm: '0.875rem',
+			base: '1rem',
+			lg: '1.125rem',
+			xl: '1.25rem'
+		},
+		transitions: {
+			fast: '150ms ease',
+			base: '250ms ease',
+			slow: '500ms ease'
+		},
+		zIndex: {
+			dropdown: 100,
+			modal: 200,
+			tooltip: 300,
+			notification: 400
 		}
 	});
 
@@ -226,7 +279,14 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 
 {#if isOpen}
 	<!-- Backdrop -->
-	<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur" onclick={onClose}></div>
+	<div 
+		class="fixed inset-0 z-50 bg-black/60 backdrop-blur" 
+		onclick={onClose}
+		onkeydown={(e) => e.key === 'Escape' && onClose?.()}
+		role="button"
+		tabindex="-1"
+		aria-label="Close theme customizer"
+	></div>
 
 	<!-- Customizer Panel -->
 	<div
@@ -262,9 +322,9 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 
 		<!-- Tabs -->
 		<div class="flex border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
-			{#each ['colors', 'typography', 'spacing', 'effects'] as tab (tab)}
+			{#each (['colors', 'typography', 'spacing', 'effects'] as const) as tab (tab)}
 				<button
-					onclick={() => (activeTab = tab)}
+					onclick={() => (activeTab = tab as typeof activeTab)}
 					class="flex-1 px-4 py-3 text-sm font-medium transition-colors {activeTab === tab
 						? 'border-b-2 border-indigo-500 text-indigo-600 dark:text-indigo-400'
 						: 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'}"
@@ -305,16 +365,17 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 
 					{#each Object.entries(customTheme.colors || {}).slice(0, 6) as [key, value] (key)}
 						<div class="flex items-center justify-between">
-							<label class="text-sm text-gray-600 dark:text-gray-400">
+							<label for="color-{key}" class="text-sm text-gray-600 dark:text-gray-400">
 								{key.replace(/([A-Z])/g, ' $1').trim()}
 							</label>
 							<div class="flex items-center gap-2">
 								<input
+									id="color-{key}"
 									type="color"
 									{value}
 									oninput={(e) => {
 										if (customTheme.colors) {
-											customTheme.colors[key] = e.currentTarget.value;
+											(customTheme.colors as any)[key] = e.currentTarget.value;
 											applyTheme();
 										}
 									}}
@@ -325,7 +386,7 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 									{value}
 									oninput={(e) => {
 										if (customTheme.colors) {
-											customTheme.colors[key] = e.currentTarget.value;
+											(customTheme.colors as any)[key] = e.currentTarget.value;
 											applyTheme();
 										}
 									}}
@@ -340,13 +401,14 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 					<h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Font Sizes</h3>
 					{#each Object.entries(customTheme.fontSizes || {}) as [key, value] (key)}
 						<div class="flex items-center justify-between">
-							<label class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
+							<label for="fontSize-{key}" class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
 							<input
+								id="fontSize-{key}"
 								type="text"
 								{value}
 								oninput={(e) => {
 									if (customTheme.fontSizes) {
-										customTheme.fontSizes[key] = e.currentTarget.value;
+										(customTheme.fontSizes as any)[key] = e.currentTarget.value;
 										applyTheme();
 									}
 								}}
@@ -360,15 +422,16 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 					<h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Spacing Scale</h3>
 					{#each Object.entries(customTheme.spacing || {}) as [key, value] (key)}
 						<div class="flex items-center justify-between">
-							<label class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
+							<label for="spacing-{key}" class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
 							<div class="flex items-center gap-2">
 								<div class="bg-indigo-500" style="width: {value}; height: 1rem;"></div>
 								<input
+									id="spacing-{key}"
 									type="text"
 									{value}
 									oninput={(e) => {
 										if (customTheme.spacing) {
-											customTheme.spacing[key] = e.currentTarget.value;
+											(customTheme.spacing as any)[key] = e.currentTarget.value;
 											applyTheme();
 										}
 									}}
@@ -381,15 +444,16 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 					<h3 class="mt-6 text-sm font-medium text-gray-700 dark:text-gray-300">Border Radius</h3>
 					{#each Object.entries(customTheme.radius || {}) as [key, value] (key)}
 						<div class="flex items-center justify-between">
-							<label class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
+							<label for="radius-{key}" class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
 							<div class="flex items-center gap-2">
 								<div class="h-8 w-8 bg-indigo-500" style="border-radius: {value};"></div>
 								<input
+									id="radius-{key}"
 									type="text"
 									{value}
 									oninput={(e) => {
 										if (customTheme.radius) {
-											customTheme.radius[key] = e.currentTarget.value;
+											(customTheme.radius as any)[key] = e.currentTarget.value;
 											applyTheme();
 										}
 									}}
@@ -404,17 +468,18 @@ export const customTheme: Partial<WalletKitTheme> = ${JSON.stringify(customTheme
 					<h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Shadows</h3>
 					{#each Object.entries(customTheme.shadows || {}) as [key, value] (key)}
 						<div class="space-y-2">
-							<label class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
+							<label for="shadow-{key}" class="text-sm text-gray-600 dark:text-gray-400">{key}</label>
 							<div
 								class="h-12 w-full rounded-lg bg-white dark:bg-gray-800"
 								style="box-shadow: {value};"
 							></div>
 							<input
+								id="shadow-{key}"
 								type="text"
 								{value}
 								oninput={(e) => {
 									if (customTheme.shadows) {
-										customTheme.shadows[key] = e.currentTarget.value;
+										(customTheme.shadows as any)[key] = e.currentTarget.value;
 										applyTheme();
 									}
 								}}

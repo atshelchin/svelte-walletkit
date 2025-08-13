@@ -35,9 +35,9 @@ const i18nConfig = {
 function createI18nInstance() {
 	const instance = setupI18n(i18nConfig);
 	// Load built-in translations synchronously
-	for (const [locale, translations] of Object.entries(packageTranslations)) {
+	for (const [locale, trans] of Object.entries(translations)) {
 		// @ts-expect-error - loadLanguageSync is not in the interface but exists on the implementation
-		instance.loadLanguageSync(locale, translations);
+		instance.loadLanguageSync(locale, trans);
 	}
 	return instance;
 }

@@ -1,13 +1,16 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+	
 	type Variant = 'body' | 'body-small' | 'caption' | 'label' | 'muted';
 
 	interface Props {
 		variant?: Variant;
 		class?: string;
 		as?: 'p' | 'span' | 'div' | 'label';
+		children: Snippet;
 	}
 
-	let { variant = 'body', class: className = '', as = 'p' }: Props = $props();
+	let { variant = 'body', class: className = '', as = 'p', children }: Props = $props();
 
 	// 统一的文本样式 - 暗色模式使用柔和的颜色
 	const styles = {
@@ -23,5 +26,5 @@
 </script>
 
 <svelte:element this={as} class={combinedClass}>
-	<slot />
+	{@render children()}
 </svelte:element>

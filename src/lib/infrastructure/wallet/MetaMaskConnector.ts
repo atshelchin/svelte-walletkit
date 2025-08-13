@@ -3,16 +3,23 @@ import { Address } from '../../domain/value-objects/Address.js';
 import { ChainId } from '../../domain/value-objects/ChainId.js';
 import type { TransactionRequest } from '../../domain/types/WalletTypes.js';
 
+interface MetaMaskEthereum {
+	isMetaMask?: boolean;
+	request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
+	on: (event: string, handler: (...args: unknown[]) => void) => void;
+	removeListener: (event: string, handler: (...args: unknown[]) => void) => void;
+}
+
 /**
  * MetaMask钱包连接器
  * 实现IWalletPort接口，提供MetaMask特定的实现
  */
 export class MetaMaskConnector implements IWalletPort {
-	private ethereum: unknown;
+	private ethereum: MetaMaskEthereum | undefined;
 
 	constructor() {
 		if (typeof window !== 'undefined') {
-			this.ethereum = (window as { ethereum?: unknown }).ethereum;
+			this.ethereum = (window as { ethereum?: MetaMaskEthereum }).ethereum;
 		}
 	}
 
@@ -20,7 +27,7 @@ export class MetaMaskConnector implements IWalletPort {
 	 * 检查MetaMask是否已安装
 	 */
 	isInstalled(): boolean {
-		return !!this.ethereum && !!(this.ethereum as { isMetaMask?: boolean }).isMetaMask;
+		return !!this.ethereum && !!this.ethereum.isMetaMask;
 	}
 
 	async connect(): Promise<WalletConnection> {
@@ -28,18 +35,18 @@ export class MetaMaskConnector implements IWalletPort {
 			throw new Error('MetaMask is not installed');
 		}
 
-		try {
-			const accounts = await (
-				this.ethereum as { request: (args: { method: string }) => Promise<string[]> }
-			).request({
-				method: 'eth_requestAccounts'
-			});
+		if (!this.ethereum) {
+			throw new Error('MetaMask is not available');
+		}
 
-			const chainId = await (
-				this.ethereum as { request: (args: { method: string }) => Promise<string> }
-			).request({
+		try {
+			const accounts = await this.ethereum.request({
+				method: 'eth_requestAccounts'
+			}) as string[];
+
+			const chainId = await this.ethereum.request({
 				method: 'eth_chainId'
-			});
+			}) as string;
 
 			return {
 				address: accounts[0],
@@ -61,15 +68,17 @@ export class MetaMaskConnector implements IWalletPort {
 			return null;
 		}
 
+		if (!this.ethereum) {
+			return null;
+		}
+
 		try {
-			const accounts = await (
-				this.ethereum as { request: (args: { method: string }) => Promise<string[]> }
-			).request({
+			const accounts = await this.ethereum.request({
 				method: 'eth_accounts'
-			});
+			}) as string[];
 
 			return accounts.length > 0 ? new Address(accounts[0]) : null;
-		} catch (error) {
+		} catch {
 			return null;
 		}
 	}
@@ -79,9 +88,13 @@ export class MetaMaskConnector implements IWalletPort {
 			throw new Error('MetaMask is not installed');
 		}
 
+		if (!this.ethereum) {
+			throw new Error('MetaMask is not available');
+		}
+
 		const chainId = await this.ethereum.request({
 			method: 'eth_chainId'
-		});
+		}) as string;
 
 		return new ChainId(parseInt(chainId, 16));
 	}
@@ -91,14 +104,18 @@ export class MetaMaskConnector implements IWalletPort {
 			throw new Error('MetaMask is not installed');
 		}
 
+		if (!this.ethereum) {
+			throw new Error('MetaMask is not available');
+		}
+
 		try {
 			await this.ethereum.request({
 				method: 'wallet_switchEthereumChain',
 				params: [{ chainId: chainId.toHex() }]
 			});
-		} catch (error) {
+		} catch (error: unknown) {
 			// 如果网络未添加，可能需要添加网络
-			if (error.code === 4902) {
+			if ((error as { code?: number }).code === 4902) {
 				throw new Error('Network not added to MetaMask');
 			}
 			throw error;
@@ -115,10 +132,14 @@ export class MetaMaskConnector implements IWalletPort {
 			throw new Error('No account connected');
 		}
 
+		if (!this.ethereum) {
+			throw new Error('MetaMask is not available');
+		}
+
 		return await this.ethereum.request({
 			method: 'personal_sign',
 			params: [message, account.toString()]
-		});
+		}) as string;
 	}
 
 	async sendTransaction(tx: TransactionRequest): Promise<string> {
@@ -126,10 +147,14 @@ export class MetaMaskConnector implements IWalletPort {
 			throw new Error('MetaMask is not installed');
 		}
 
+		if (!this.ethereum) {
+			throw new Error('MetaMask is not available');
+		}
+
 		return await this.ethereum.request({
 			method: 'eth_sendTransaction',
 			params: [tx]
-		});
+		}) as string;
 	}
 
 	onAccountChange(callback: (account: Address | null) => void): () => void {
@@ -137,12 +162,17 @@ export class MetaMaskConnector implements IWalletPort {
 			return () => {};
 		}
 
-		const handler = (accounts: string[]) => {
+		const handler = (...args: unknown[]) => {
+			const accounts = args[0] as string[];
 			callback(accounts.length > 0 ? new Address(accounts[0]) : null);
 		};
 
+		if (!this.ethereum) {
+			return () => {};
+		}
+
 		this.ethereum.on('accountsChanged', handler);
-		return () => this.ethereum.removeListener('accountsChanged', handler);
+		return () => this.ethereum?.removeListener('accountsChanged', handler);
 	}
 
 	onChainChange(callback: (chainId: ChainId) => void): () => void {
@@ -150,11 +180,16 @@ export class MetaMaskConnector implements IWalletPort {
 			return () => {};
 		}
 
-		const handler = (chainIdHex: string) => {
+		const handler = (...args: unknown[]) => {
+			const chainIdHex = args[0] as string;
 			callback(new ChainId(parseInt(chainIdHex, 16)));
 		};
 
+		if (!this.ethereum) {
+			return () => {};
+		}
+
 		this.ethereum.on('chainChanged', handler);
-		return () => this.ethereum.removeListener('chainChanged', handler);
+		return () => this.ethereum?.removeListener('chainChanged', handler);
 	}
 }

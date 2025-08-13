@@ -57,6 +57,15 @@ export interface WalletKitTheme {
 		inputBackground: string;
 		buttonBackground: string;
 		buttonText: string;
+		buttonPrimary?: string;
+		buttonPrimaryHover?: string;
+		buttonPrimaryText?: string;
+		buttonSecondary?: string;
+		buttonSecondaryHover?: string;
+		buttonSecondaryText?: string;
+		buttonGhost?: string;
+		buttonGhostHover?: string;
+		buttonGhostText?: string;
 
 		// 状态颜色
 		hover: string;
@@ -76,6 +85,9 @@ export interface WalletKitTheme {
 		input: string;
 		modal: string;
 		dropdown: string;
+		card?: string;
+		focus?: string;
+		tooltip?: string;
 	};
 
 	// 阴影
@@ -104,6 +116,8 @@ export interface WalletKitTheme {
 	fonts: {
 		base: string;
 		mono: string;
+		body?: string;
+		heading?: string;
 	};
 
 	// 字体大小
@@ -146,6 +160,9 @@ export interface WalletKitTheme {
 		modal: number;
 		tooltip: number;
 		notification: number;
+		sticky?: number;
+		overlay?: number;
+		popover?: number;
 	};
 }
 

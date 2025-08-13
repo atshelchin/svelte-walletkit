@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ThemeCustomizer } from '$lib/presentation/components/ThemeCustomizer.svelte';
+	import ThemeCustomizer from '$lib/presentation/components/ThemeCustomizer.svelte';
 	import { presetThemes, exportThemeToCSS } from '$lib/infrastructure/theme/createTheme.js';
 	import Button from '$lib/presentation/components/shared/Button.svelte';
 	import Card from '$lib/presentation/components/shared/Card.svelte';
@@ -227,10 +227,10 @@
 					<h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Badges & Tags</h3>
 					<div class="flex flex-wrap gap-3">
 						<Badge variant="primary">Primary</Badge>
-						<Badge variant="secondary">Secondary</Badge>
+						<Badge variant="default">Default</Badge>
 						<Badge variant="success">Success</Badge>
 						<Badge variant="warning">Warning</Badge>
-						<Badge variant="danger">Danger</Badge>
+						<Badge variant="error">Error</Badge>
 						<Badge variant="info">Info</Badge>
 					</div>
 

@@ -95,7 +95,7 @@ export interface Connector {
 	disconnect(): Promise<void>;
 	getAccount(): Promise<WalletAccount | null>;
 	switchChain(chainId: number): Promise<void>;
-	watchAsset?(asset: any): Promise<void>;
+	watchAsset?(asset: { type: string; options: Record<string, unknown> }): Promise<void>;
 	onAccountsChanged?(callback: (accounts: string[]) => void): void;
 	onChainChanged?(callback: (chainId: number) => void): void;
 	onDisconnect?(callback: () => void): void;

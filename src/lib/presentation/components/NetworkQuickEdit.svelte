@@ -73,7 +73,7 @@
 					isValidating: false
 				}
 			};
-		} catch (error) {
+		} catch {
 			rpcValidationResults = {
 				...rpcValidationResults,
 				[simpleFormData.rpcUrl]: {
@@ -110,7 +110,7 @@
 					isValidating: false
 				}
 			};
-		} catch (error) {
+		} catch {
 			rpcValidationResults = {
 				...rpcValidationResults,
 				[url]: {
