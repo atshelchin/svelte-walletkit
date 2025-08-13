@@ -1,26 +1,32 @@
 # WalletKit
 
-[![npm version](https://img.shields.io/npm/v/@shelchin/walletkit.svg)](https://www.npmjs.com/package/@shelchin/walletkit)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![CI](https://github.com/atshelchin/walletkit/actions/workflows/ci.yml/badge.svg)](https://github.com/atshelchin/walletkit/actions/workflows/ci.yml)
-[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://atshelchin.github.io/walletkit)
+<div align="center">
+  <h3>Modern Ethereum Wallet Connection Library for Svelte</h3>
+  <p>Lightweight, customizable, and feature-rich wallet connection solution</p>
+  
+  <p>
+    <a href="https://www.npmjs.com/package/@shelchin/walletkit"><img src="https://img.shields.io/npm/v/@shelchin/walletkit.svg" alt="npm version"></a>
+    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+    <a href="https://bundlephobia.com/package/@shelchin/walletkit"><img src="https://img.shields.io/bundlephobia/minzip/@shelchin/walletkit" alt="Bundle Size"></a>
+  </p>
+</div>
 
-A modern, lightweight Ethereum wallet connection library for Svelte applications with dual usage modes - as an NPM package for Svelte apps or as a standalone widget for any HTML page.
+[English](./README.md) | [简体中文](./README-zh.md)
 
 ## ✨ Features
 
-- 🎯 **Dual Usage Modes**: NPM package for Svelte apps AND standalone JavaScript for any HTML page
-- 🚀 **Lightweight**: Built with viem instead of wagmi for significantly smaller bundle size
-- 🌐 **Advanced Network Management**: RPC load balancing, custom networks, multi-chain support
-- 💼 **Extensive Wallet Support**: MetaMask, WalletConnect, Coinbase Wallet, Safe, Ledger, and all EIP-6963 wallets
-- 🔐 **Security First**: SIWE authentication, encrypted sessions, input validation
-- 🎨 **Full Customization**: Complete theming system, i18n support, widget mode
-- 📱 **Mobile Optimized**: Responsive design, mobile wallet deep linking
-- 🔥 **Developer Experience**: Full TypeScript support, comprehensive docs, event-driven architecture
+- 🚀 **Lightweight** - Built with Viem instead of Wagmi, core library < 50KB gzipped
+- 🌍 **Multi-Chain Support** - Seamless network switching with RPC load balancing
+- 🔐 **Extensive Wallet Support** - MetaMask, WalletConnect, Coinbase, Safe, Ledger, and EIP-6963 auto-detection
+- 🎨 **Fully Customizable** - Complete theming system with dark mode support
+- 🌐 **i18n Ready** - Built-in internationalization support
+- 📱 **Mobile Optimized** - Responsive design with touch-friendly interactions
+- 🔧 **Framework Agnostic** - Use as NPM package or standalone script
+- 🛡️ **Type Safe** - Full TypeScript support with comprehensive type definitions
 
 ## 📦 Installation
 
-### NPM Package (Recommended for Svelte Apps)
+### NPM Package (for Svelte apps)
 
 ```bash
 npm install @shelchin/walletkit
@@ -30,320 +36,315 @@ pnpm add @shelchin/walletkit
 yarn add @shelchin/walletkit
 ```
 
-### Standalone Widget (For Any HTML Page)
+### Standalone Script (for any website)
 
 ```html
-<!-- Add to your HTML -->
-<script src="https://unpkg.com/@shelchin/walletkit/dist/widget.umd.cjs"></script>
+<script src="https://unpkg.com/@shelchin/walletkit/dist/standalone.js"></script>
 ```
 
 ## 🚀 Quick Start
 
-### Svelte Application
+### Svelte Component
 
 ```svelte
 <script>
-	import { WalletKit } from '@shelchin/walletkit';
-	import { onMount } from 'svelte';
-
-	let walletKit;
-
-	onMount(() => {
-		walletKit = new WalletKit({
-			projectId: 'your-walletconnect-project-id', // Get from https://cloud.walletconnect.com
-			networks: [1, 137, 56], // Ethereum, Polygon, BSC
-			theme: 'auto', // 'light', 'dark', or 'auto'
-			locale: 'en' // 'en', 'zh', etc.
-		});
-	});
-
-	async function connectWallet() {
-		const account = await walletKit.connect();
-		console.log('Connected:', account);
-	}
+  import { WalletKit, WalletButton } from '@shelchin/walletkit';
+  
+  const config = {
+    projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Required for WalletConnect
+    networks: [1, 137, 42161], // Ethereum, Polygon, Arbitrum
+    theme: 'auto', // 'light' | 'dark' | 'auto'
+    locale: 'en' // 'en' | 'zh'
+  };
 </script>
 
-<button on:click={connectWallet}> Connect Wallet </button>
+<WalletKit {config}>
+  <WalletButton />
+</WalletKit>
 ```
 
-### Standalone Widget
+### Standalone Usage
 
 ```html
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>WalletKit Example</title>
-	</head>
-	<body>
-		<!-- Your content -->
+<div id="wallet-container"></div>
 
-		<!-- Add WalletKit widget -->
-		<script src="https://unpkg.com/@shelchin/walletkit/dist/widget.umd.cjs"></script>
-		<script>
-			// Initialize the widget
-			WalletKitWidget.init({
-				position: { side: 'right' }, // 'left' or 'right'
-				theme: 'light',
-				networks: [1, 137],
-				projectId: 'your-walletconnect-project-id'
-			});
-
-			// Listen for wallet events
-			WalletKitWidget.on('connect', (account) => {
-				console.log('Wallet connected:', account);
-			});
-
-			WalletKitWidget.on('disconnect', () => {
-				console.log('Wallet disconnected');
-			});
-		</script>
-	</body>
-</html>
+<script src="https://unpkg.com/@shelchin/walletkit/dist/standalone.js"></script>
+<script>
+  WalletKit.init({
+    containerId: 'wallet-container',
+    projectId: 'YOUR_WALLETCONNECT_PROJECT_ID',
+    theme: 'dark',
+    networks: [1, 137, 42161]
+  });
+</script>
 ```
 
-## 🛠️ Configuration
+## 🛠️ Advanced Configuration
 
-### WalletKit Options
+### Complete Configuration Options
 
 ```typescript
 interface WalletKitConfig {
-	// Required
-	projectId?: string; // WalletConnect project ID
-
-	// Network Configuration
-	networks?: number[]; // Chain IDs to support
-	defaultNetwork?: number; // Default chain ID
-	rpcUrls?: Record<number, string[]>; // Custom RPC URLs
-
-	// UI Configuration
-	theme?: 'light' | 'dark' | 'auto';
-	locale?: 'en' | 'zh' | 'ja' | 'ko' | 'es' | 'fr';
-	position?: { side: 'left' | 'right' };
-
-	// Features
-	enableAnalytics?: boolean;
-	enableSIWE?: boolean; // Sign-In with Ethereum
-	enableENS?: boolean; // ENS resolution
-
-	// Callbacks
-	onConnect?: (account: string) => void;
-	onDisconnect?: () => void;
-	onNetworkChange?: (chainId: number) => void;
+  // WalletConnect Project ID (required for WalletConnect)
+  projectId?: string;
+  
+  // Supported networks (chain IDs)
+  networks?: number[];
+  
+  // Custom RPC endpoints
+  rpcUrls?: Record<number, string[]>;
+  
+  // Theme configuration
+  theme?: 'light' | 'dark' | 'auto' | ThemeConfig;
+  
+  // Localization
+  locale?: 'en' | 'zh' | LocaleConfig;
+  
+  // Wallet options
+  wallets?: {
+    includeDefault?: boolean;
+    custom?: WalletConfig[];
+  };
+  
+  // Features
+  features?: {
+    ensResolution?: boolean;
+    siwe?: boolean; // Sign-In with Ethereum
+    analytics?: boolean;
+  };
+  
+  // Custom modal options
+  modal?: {
+    disableBackdropClick?: boolean;
+    showRecentTransactions?: boolean;
+  };
 }
 ```
 
-## 📚 API Reference
-
-### Core Methods
-
-```typescript
-// Connect wallet
-const account = await walletKit.connect();
-
-// Disconnect wallet
-await walletKit.disconnect();
-
-// Get current account
-const account = walletKit.getAccount();
-
-// Get current network
-const chainId = walletKit.getChainId();
-
-// Switch network
-await walletKit.switchNetwork(137); // Switch to Polygon
-
-// Sign message
-const signature = await walletKit.signMessage('Hello World');
-
-// Send transaction
-const hash = await walletKit.sendTransaction({
-	to: '0x...',
-	value: '1000000000000000000', // 1 ETH in wei
-	data: '0x'
-});
-```
-
-### Widget-Specific Methods
-
-```javascript
-// Show/hide widget
-WalletKitWidget.show();
-WalletKitWidget.hide();
-
-// Update configuration
-WalletKitWidget.updateConfig({ theme: 'dark' });
-
-// Destroy widget
-WalletKitWidget.destroy();
-```
-
-## 🎨 Theming
-
-### Using CSS Variables
-
-```css
-:root {
-	--walletkit-primary: #667eea;
-	--walletkit-primary-hover: #5a67d8;
-	--walletkit-background: #ffffff;
-	--walletkit-text: #333333;
-	--walletkit-border: #e2e8f0;
-	--walletkit-radius: 8px;
-	--walletkit-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-```
-
-### Custom Theme Object
+### Custom Theme
 
 ```javascript
 const customTheme = {
-	colors: {
-		primary: '#667eea',
-		background: '#ffffff',
-		text: '#333333',
-		border: '#e2e8f0'
-	},
-	fonts: {
-		body: 'Inter, sans-serif'
-	},
-	radii: {
-		button: '8px',
-		modal: '12px'
-	}
+  colors: {
+    primary: '#6366f1',
+    background: '#ffffff',
+    text: '#111827',
+    border: '#e5e7eb'
+  },
+  radius: {
+    button: '0.75rem',
+    modal: '1.5rem'
+  },
+  fonts: {
+    base: 'Inter, system-ui, sans-serif'
+  }
 };
 
-walletKit.setTheme(customTheme);
+WalletKit.init({
+  theme: customTheme
+});
+```
+
+### Custom Networks
+
+```javascript
+const customNetworks = {
+  networks: [1, 137, 42161, 56], // Include BSC
+  rpcUrls: {
+    1: ['https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY'],
+    137: ['https://polygon-rpc.com'],
+    42161: ['https://arb1.arbitrum.io/rpc'],
+    56: ['https://bsc-dataseed.binance.org']
+  }
+};
+```
+
+## 📱 Mobile Support
+
+WalletKit is fully optimized for mobile devices with:
+
+- Touch-friendly interface
+- Bottom sheet modals on mobile
+- QR code scanning for WalletConnect
+- Deep linking support
+- Responsive design
+
+## 🎨 Theming
+
+### Built-in Themes
+
+- **Light** - Clean and modern light theme
+- **Dark** - Eye-friendly dark theme
+- **Auto** - Follows system preferences
+
+### Custom Theming
+
+```javascript
+import { createTheme } from '@shelchin/walletkit';
+
+const myTheme = createTheme({
+  primary: '#8b5cf6',
+  secondary: '#ec4899',
+  borderRadius: 'lg',
+  fontFamily: 'Roboto, sans-serif'
+});
 ```
 
 ## 🌍 Internationalization
 
-Supports multiple languages out of the box:
+### Supported Languages
+
+- English (en)
+- 简体中文 (zh)
+
+### Custom Translations
 
 ```javascript
-// Change language
-walletKit.setLocale('zh'); // Switch to Chinese
+const customLocale = {
+  connect: 'Connect Wallet',
+  disconnect: 'Disconnect',
+  switchNetwork: 'Switch Network',
+  copyAddress: 'Copy Address',
+  // ... more translations
+};
 
-// Available locales
-// 'en' - English (default)
-// 'zh' - Chinese
-// 'ja' - Japanese
-// 'ko' - Korean
-// 'es' - Spanish
-// 'fr' - French
+WalletKit.init({
+  locale: customLocale
+});
 ```
 
-## 🔧 Development
+## 🔌 API Reference
+
+### Core Methods
+
+```typescript
+// Initialize WalletKit
+WalletKit.init(config: WalletKitConfig): void
+
+// Connect wallet
+WalletKit.connect(): Promise<WalletConnection>
+
+// Disconnect wallet
+WalletKit.disconnect(): Promise<void>
+
+// Get current account
+WalletKit.getAccount(): Address | null
+
+// Switch network
+WalletKit.switchNetwork(chainId: number): Promise<void>
+
+// Sign message
+WalletKit.signMessage(message: string): Promise<string>
+
+// Send transaction
+WalletKit.sendTransaction(tx: TransactionRequest): Promise<string>
+```
+
+### Event Listeners
+
+```javascript
+// Account change
+WalletKit.onAccountChange((account) => {
+  console.log('Account changed:', account);
+});
+
+// Network change
+WalletKit.onChainChange((chainId) => {
+  console.log('Network changed:', chainId);
+});
+
+// Connection status
+WalletKit.onConnectionChange((connected) => {
+  console.log('Connection status:', connected);
+});
+```
+
+### Svelte Stores
+
+```javascript
+import { 
+  account, 
+  chainId, 
+  connected, 
+  connecting 
+} from '@shelchin/walletkit';
+
+// Use in Svelte components
+$: currentAccount = $account;
+$: currentChain = $chainId;
+$: isConnected = $connected;
+```
+
+## 🏗️ Architecture
+
+WalletKit follows Clean Architecture principles:
+
+```
+src/
+├── lib/
+│   ├── domain/          # Business logic & types
+│   ├── application/     # Use cases & services
+│   ├── infrastructure/  # External integrations
+│   └── presentation/    # UI components
+├── standalone/          # Standalone build entry
+└── routes/             # Demo pages
+```
+
+## 🧪 Development
 
 ### Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/atshelchin/walletkit.git
-cd walletkit
-
 # Install dependencies
 pnpm install
 
 # Start development server
 pnpm dev
-```
 
-### Build
+# Run tests
+pnpm test
 
-```bash
-# Build library for NPM
-pnpm build:lib
-
-# Build standalone widget
-pnpm build:widget
-
-# Build documentation site
-pnpm build:docs
-
-# Build everything
+# Build library
 pnpm build
+
+# Lint & format
+pnpm lint
+pnpm format
 ```
 
 ### Testing
 
 ```bash
-# Run unit tests
+# Unit tests
 pnpm test:unit
 
-# Run E2E tests
+# E2E tests
 pnpm test:e2e
 
-# Run all tests
-pnpm test
+# Type checking
+pnpm check
 ```
-
-## 📋 Supported Wallets
-
-- **Injected Wallets**: MetaMask, Brave Wallet, Opera Wallet, etc.
-- **WalletConnect**: 300+ wallets via WalletConnect protocol
-- **Coinbase Wallet**: Including Smart Wallet support
-- **Safe**: Gnosis Safe multi-sig wallets
-- **Ledger**: Hardware wallet support
-- **Trezor**: Hardware wallet support
-- **EIP-6963**: Auto-detection of installed wallets
-
-## 🌐 Supported Networks
-
-Default support for:
-
-- Ethereum Mainnet
-- Polygon
-- Binance Smart Chain
-- Arbitrum
-- Optimism
-- Avalanche
-- And more...
-
-Easy to add custom networks:
-
-```javascript
-walletKit.addNetwork({
-	chainId: 42161,
-	name: 'Arbitrum One',
-	rpcUrls: ['https://arb1.arbitrum.io/rpc'],
-	nativeCurrency: {
-		name: 'Ether',
-		symbol: 'ETH',
-		decimals: 18
-	},
-	blockExplorers: ['https://arbiscan.io']
-});
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT © 2025 WalletKit
 
-## 🙏 Acknowledgments
+## 🤝 Contributing
 
-- Built with [Svelte](https://svelte.dev) and [SvelteKit](https://kit.svelte.dev)
-- Ethereum interactions powered by [viem](https://viem.sh)
-- Wallet connections via [WalletConnect](https://walletconnect.com)
-- UI components styled with [Tailwind CSS](https://tailwindcss.com)
+Contributions are welcome! Please read our [Contributing Guide](./CONTRIBUTING.md) for details.
 
-## 📞 Support
+## 🔗 Links
 
-- 📧 Email: support@walletkit.io
-- 💬 Discord: [Join our community](https://discord.gg/walletkit)
-- 🐦 Twitter: [@walletkit](https://twitter.com/walletkit)
-- 📖 Documentation: [https://atshelchin.github.io/walletkit](https://atshelchin.github.io/walletkit)
-- 🐛 Issues: [GitHub Issues](https://github.com/atshelchin/walletkit/issues)
+- [NPM Package](https://www.npmjs.com/package/@shelchin/walletkit)
+- [GitHub Repository](https://github.com/shelchin2023/walletkit)
+- [Live Demo](https://walletkit-demo.netlify.app)
+
+## 💖 Sponsors
+
+Special thanks to all our sponsors and contributors!
 
 ---
 
-<p align="center">Made with ❤️ by the WalletKit Team</p>
+<div align="center">
+  Made with ❤️ by the WalletKit team
+</div>
