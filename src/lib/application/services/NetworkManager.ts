@@ -51,13 +51,21 @@ export class NetworkManager {
 	private saveCustomNetworks(): void {
 		if (typeof localStorage !== 'undefined') {
 			try {
-				// 只保存非预设网络或已修改的预设网络
+				// 保存所有非预设网络和已修改的预设网络
 				const customNetworks = Array.from(this.networks.values()).filter((network) => {
 					const preset = this.presetNetworks.find((p) => p.chainId === network.chainId);
+					// 如果不是预设网络，或者是预设网络但已被修改，则保存
 					return !preset || JSON.stringify(preset) !== JSON.stringify(network);
 				});
+				
+				console.log('Networks to save:', customNetworks);
+				console.log('Storage key:', this.storageKey);
+				
 				localStorage.setItem(this.storageKey, JSON.stringify(customNetworks));
-				console.log('Saved custom networks to localStorage:', customNetworks);
+				
+				// 验证保存
+				const saved = localStorage.getItem(this.storageKey);
+				console.log('Verified saved data:', saved);
 			} catch (error) {
 				console.error('Failed to save custom networks:', error);
 				throw error; // Re-throw to surface the error

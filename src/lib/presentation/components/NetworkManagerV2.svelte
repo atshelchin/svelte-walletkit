@@ -14,6 +14,7 @@
 		Loader2,
 		RefreshCw,
 		CheckCircle,
+				CheckCircle2,
 		XCircle,
 		Circle,
 		Network,
@@ -49,6 +50,8 @@
 	let validationErrors = $state<Record<string, string>>({});
 	let isValidating = $state(false);
 	let isSaving = $state(false);
+	let saveStatus = $state<'idle' | 'saving' | 'success' | 'error'>('idle');
+	let saveError = $state('');
 	let rpcValidationStates = $state<Record<string, RpcValidationState>>({});
 	
 	// 搜索和分页状态
@@ -78,7 +81,7 @@
 		);
 	});
 	
-	// 显示Toast通知
+	// 显示 Toast 通知
 	function showToast(message: string, type: 'success' | 'error' | 'info' = 'success') {
 		toastMessage = message;
 		toastType = type;
@@ -157,6 +160,8 @@
 		rpcValidationStates = {};
 		saveSuccess = false;
 		saveMessage = '';
+		saveStatus = 'idle';
+		saveError = '';
 	}
 
 	function addRpcUrl() {
@@ -165,7 +170,7 @@
 		}
 		formData.rpcUrls = [...formData.rpcUrls, ''];
 		
-		// 如果没有默认RPC，设置第一个为默认
+		// 如果没有默认 RPC，设置第一个为默认
 		if (!formData.defaultRpcUrl && formData.rpcUrls.length === 1) {
 			formData.defaultRpcUrl = formData.rpcUrls[0];
 		}
@@ -182,12 +187,12 @@
 			formData.rpcUrls[index] = value;
 			formData.rpcUrls = [...formData.rpcUrls];
 			
-			// 如果这是第一个RPC且没有默认值，自动设为默认
+			// 如果这是第一个 RPC 且没有默认值，自动设为默认
 			if (!formData.defaultRpcUrl && index === 0 && value) {
 				formData.defaultRpcUrl = value;
 			}
 			
-			// 如果修改的是默认RPC，更新默认值
+			// 如果修改的是默认 RPC，更新默认值
 			if (formData.defaultRpcUrl === formData.rpcUrls[index]) {
 				formData.defaultRpcUrl = value;
 			}
@@ -368,6 +373,8 @@
 
 			// 保存网络
 			isSaving = true;
+			saveStatus = 'saving';
+			saveError = '';
 			
 			const networkConfig: NetworkConfig = {
 				chainId: formData.chainId!,
@@ -388,18 +395,31 @@
 				console.log('Network updated:', networkConfig);
 				showToast('✅ Network updated and saved!', 'success');
 			}
+			
+			// 显示成功状态
+			saveStatus = 'success';
+			isSaving = false;
 
 			// 延迟关闭编辑界面
 			setTimeout(() => {
 				cancelEdit();
-			}, 1500);
+			}, 1200);
 		} catch (error) {
-			validationErrors = {
-				save: error instanceof Error ? error.message : 'Failed to save network'
-			};
+			saveError = error instanceof Error ? error.message : 'Failed to save network';
+			saveStatus = 'error';
+			isSaving = false;
+			
+			// 3 秒后重置错误状态
+			setTimeout(() => {
+				if (saveStatus === 'error') {
+					saveStatus = 'idle';
+				}
+			}, 3000);
 		} finally {
 			isValidating = false;
-			isSaving = false;
+			if (saveStatus === 'saving') {
+				isSaving = false;
+			}
 		}
 	}
 
@@ -575,7 +595,7 @@
 											<span>Validating connection...</span>
 										{:else if validationState.result}
 											{#if validationState.result.valid}
-												<CheckCircle class="h-3 w-3" />
+												<CheckCircle2 class="h-3 w-3" />
 												<span>Connected • {validationState.result.latency}ms latency</span>
 											{:else}
 												<XCircle class="h-3 w-3" />
@@ -715,10 +735,10 @@
 					{/if}
 				</div>
 
-				{#if validationErrors.save}
-					<div class="flex items-center gap-2 rounded-lg bg-red-50 p-3 text-red-700 dark:bg-red-900/20 dark:text-red-400">
-						<AlertCircle class="h-4 w-4" />
-						<p class="text-sm">{validationErrors.save}</p>
+				{#if saveStatus === 'error' && saveError}
+					<div class="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-red-700 shadow-sm dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
+						<XCircle class="h-4 w-4 flex-shrink-0" />
+						<p class="text-sm font-medium">{saveError}</p>
 					</div>
 				{/if}
 
@@ -733,15 +753,24 @@
 					</button>
 					<button
 						onclick={handleSave}
-						disabled={isValidating || isSaving}
-						class="flex items-center gap-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-2.5 font-medium text-white shadow-lg transition-all hover:from-indigo-600 hover:to-purple-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+						disabled={isValidating || isSaving || saveStatus === 'success'}
+						class="relative flex items-center gap-2 rounded-lg px-6 py-2.5 font-medium text-white shadow-lg transition-all disabled:cursor-not-allowed {saveStatus === 'success' ? 'bg-gradient-to-r from-emerald-500 to-green-600' : saveStatus === 'error' ? 'bg-gradient-to-r from-red-500 to-rose-600' : 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 hover:shadow-xl'}"
 					>
-						{#if isValidating || isSaving}
+						{#if isValidating}
 							<Loader2 class="h-4 w-4 animate-spin" />
-							{isValidating ? 'Validating...' : 'Saving...'}
+							<span>Validating...</span>
+						{:else if saveStatus === 'saving'}
+							<Loader2 class="h-4 w-4 animate-spin" />
+							<span class="animate-pulse">Saving to Storage...</span>
+						{:else if saveStatus === 'success'}
+							<Check class="h-4 w-4 animate-bounce" />
+							<span>Saved!</span>
+						{:else if saveStatus === 'error'}
+							<X class="h-4 w-4" />
+							<span>Failed - Try Again</span>
 						{:else}
 							<Save class="h-4 w-4" />
-							Save Network
+							<span>Save Network</span>
 						{/if}
 					</button>
 				</div>
