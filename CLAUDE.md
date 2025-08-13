@@ -157,3 +157,60 @@ Future phases include WalletConnect, multi-wallet support, RPC load balancing, f
 - Must support both NPM and standalone usage
 - All features must work on mobile browsers
 - Must maintain backward compatibility in minor versions
+- Svelte components must not exceed 400 lines of code
+- Avoid code duplication - extract common patterns into utilities or shared components
+- Mobile-first design with touch-friendly interactions
+
+## Code Quality Guidelines
+
+### Component Architecture
+
+- **Maximum 400 lines per Svelte component**: Split large components into smaller, focused ones
+- **Extract reusable UI elements**: Common buttons, inputs, modals should be separate components
+- **Use composition over duplication**: Create base components that can be extended
+- **Separate concerns**: Business logic in services, UI logic in components, state in stores
+
+### Mobile Optimization
+
+- **Touch targets**: Minimum 44x44px for all interactive elements
+- **Responsive design**: Use relative units (rem, %, vw/vh) instead of fixed pixels
+- **Performance**: Lazy load heavy components, minimize re-renders
+- **Gestures**: Support swipe gestures for modals and dropdowns
+- **Viewport**: Ensure proper viewport meta tag and prevent zoom on input focus
+- **Bottom sheets**: Use bottom sheets instead of centered modals on mobile
+- **Safe areas**: Account for notches and home indicators on mobile devices
+
+### Code Reusability Patterns
+
+- **Shared components**: `src/lib/presentation/components/shared/`
+  - Button, Input, Modal, Dropdown, Card, Badge, etc.
+- **Utility functions**: `src/lib/utils/`
+  - Validation, formatting, device detection, etc.
+- **Composables**: `src/lib/composables/`
+  - Reusable logic hooks (useModal, useToast, useValidation, etc.)
+- **Theme constants**: Use CSS variables from theme system
+- **Icon components**: Create reusable icon wrapper components
+
+### Mobile-First CSS
+
+```css
+/* Start with mobile styles */
+.component {
+	padding: var(--wk-spacing-sm);
+	font-size: var(--wk-font-size-base);
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+	.component {
+		padding: var(--wk-spacing-md);
+	}
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+	.component {
+		padding: var(--wk-spacing-lg);
+	}
+}
+```
