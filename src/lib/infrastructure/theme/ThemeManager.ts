@@ -11,9 +11,17 @@ import type {
 export const defaultLightTheme: WalletKitTheme = {
 	colors: {
 		// 使用 CSS 变量，允许继承宿主应用的颜色
-		primary: 'var(--wk-primary, #3b82f6)',
-		primaryHover: 'var(--wk-primary-hover, #2563eb)',
-		primaryActive: 'var(--wk-primary-active, #1d4ed8)',
+		primary: 'var(--wk-primary, #6366f1)',
+		primaryDark: 'var(--wk-primary-dark, #4f46e5)',
+		primaryLight: 'var(--wk-primary-light, #818cf8)',
+		primaryHover: 'var(--wk-primary-hover, #4f46e5)',
+		primaryActive: 'var(--wk-primary-active, #4338ca)',
+
+		secondary: 'var(--wk-secondary, #8b5cf6)',
+		secondaryDark: 'var(--wk-secondary-dark, #7c3aed)',
+		secondaryLight: 'var(--wk-secondary-light, #a78bfa)',
+
+		accent: 'var(--wk-accent, #ec4899)',
 
 		success: 'var(--wk-success, #10b981)',
 		successLight: 'var(--wk-success-light, #d1fae5)',
@@ -74,6 +82,17 @@ export const defaultLightTheme: WalletKitTheme = {
 	},
 
 	spacing: {
+		'0': 'var(--wk-spacing-0, 0)',
+		'1': 'var(--wk-spacing-1, 0.25rem)',
+		'1-5': 'var(--wk-spacing-1-5, 0.375rem)',
+		'2': 'var(--wk-spacing-2, 0.5rem)',
+		'2-5': 'var(--wk-spacing-2-5, 0.625rem)',
+		'3': 'var(--wk-spacing-3, 0.75rem)',
+		'3-5': 'var(--wk-spacing-3-5, 0.875rem)',
+		'4': 'var(--wk-spacing-4, 1rem)',
+		'5': 'var(--wk-spacing-5, 1.25rem)',
+		'6': 'var(--wk-spacing-6, 1.5rem)',
+		'8': 'var(--wk-spacing-8, 2rem)',
 		xs: 'var(--wk-spacing-xs, 0.5rem)',
 		sm: 'var(--wk-spacing-sm, 0.75rem)',
 		md: 'var(--wk-spacing-md, 1rem)',
@@ -94,10 +113,24 @@ export const defaultLightTheme: WalletKitTheme = {
 		xl: 'var(--wk-font-size-xl, 1.25rem)'
 	},
 
+	fontWeights: {
+		normal: 'var(--wk-font-weight-normal, 400)',
+		medium: 'var(--wk-font-weight-medium, 500)',
+		semibold: 'var(--wk-font-weight-semibold, 600)',
+		bold: 'var(--wk-font-weight-bold, 700)'
+	},
+
 	transitions: {
-		fast: 'var(--wk-transition-fast, 150ms ease)',
-		base: 'var(--wk-transition-base, 250ms ease)',
-		slow: 'var(--wk-transition-slow, 350ms ease)'
+		fast: 'var(--wk-transition-fast, all 150ms ease)',
+		normal: 'var(--wk-transition-normal, all 250ms ease)',
+		base: 'var(--wk-transition-base, all 250ms ease)',
+		slow: 'var(--wk-transition-slow, all 350ms ease)'
+	},
+
+	gradients: {
+		primary: 'var(--wk-gradient-primary, linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%))',
+		secondary: 'var(--wk-gradient-secondary, linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%))',
+		surface: 'var(--wk-gradient-surface, linear-gradient(180deg, #ffffff 0%, #f9fafb 100%))'
 	},
 
 	zIndex: {
@@ -115,9 +148,17 @@ export const defaultDarkTheme: WalletKitTheme = {
 	...defaultLightTheme,
 	colors: {
 		...defaultLightTheme.colors,
-		primary: 'var(--wk-primary, #60a5fa)',
-		primaryHover: 'var(--wk-primary-hover, #93bbfc)',
-		primaryActive: 'var(--wk-primary-active, #3b82f6)',
+		primary: 'var(--wk-primary, #818cf8)',
+		primaryDark: 'var(--wk-primary-dark, #6366f1)',
+		primaryLight: 'var(--wk-primary-light, #a5b4fc)',
+		primaryHover: 'var(--wk-primary-hover, #6366f1)',
+		primaryActive: 'var(--wk-primary-active, #4f46e5)',
+
+		secondary: 'var(--wk-secondary, #a78bfa)',
+		secondaryDark: 'var(--wk-secondary-dark, #8b5cf6)',
+		secondaryLight: 'var(--wk-secondary-light, #c4b5fd)',
+
+		accent: 'var(--wk-accent, #f472b6)',
 
 		success: 'var(--wk-success, #34d399)',
 		successLight: 'var(--wk-success-light, #064e3b)',
@@ -361,9 +402,21 @@ export class ThemeManager {
 			root.style.setProperty(`--wk-font-size-${key}`, String(value));
 		});
 
+		if (theme.fontWeights) {
+			Object.entries(theme.fontWeights).forEach(([key, value]) => {
+				root.style.setProperty(`--wk-font-weight-${key}`, String(value));
+			});
+		}
+
 		Object.entries(theme.transitions).forEach(([key, value]) => {
 			root.style.setProperty(`--wk-transition-${key}`, String(value));
 		});
+
+		if (theme.gradients) {
+			Object.entries(theme.gradients).forEach(([key, value]) => {
+				root.style.setProperty(`--wk-gradient-${this.kebabCase(key)}`, String(value));
+			});
+		}
 
 		// z-index 作为 CSS 变量
 		Object.entries(theme.zIndex).forEach(([key, value]) => {

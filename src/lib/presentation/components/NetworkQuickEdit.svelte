@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { NetworkConfig } from '$lib/domain/types/WalletTypes.js';
 	import { networkStore } from '$lib/presentation/stores/networkStore.svelte';
+	import Heading from '$lib/presentation/components/shared/Heading.svelte';
+	import Text from '$lib/presentation/components/shared/Text.svelte';
 	import {
 		Check,
 		Loader2,
@@ -259,14 +261,14 @@
 
 <div class="max-h-[70vh] space-y-4 overflow-y-auto p-4">
 	<div>
-		<h3 class="mb-3 font-medium">Edit {network.name}</h3>
-		<div class="text-sm text-gray-500 dark:text-gray-400">Chain ID: {network.chainId}</div>
+		<Heading level={4} class="mb-3">Edit {network.name}</Heading>
+		<Text variant="caption">Chain ID: {network.chainId}</Text>
 	</div>
 
 	{#if enableRpcLoadBalancing}
 		<!-- 负载均衡模式：多 RPC 管理 -->
 		<div>
-			<label class="mb-2 block text-sm font-medium">RPC URLs</label>
+			<Text variant="label" as="label" class="mb-2 block">RPC URLs</Text>
 			<div class="space-y-2">
 				{#each balancingFormData.rpcUrls as url, index (url + '_' + index)}
 					{@const validation = rpcValidationResults[url]}
@@ -337,7 +339,7 @@
 	{:else}
 		<!-- 简单模式：单个 RPC -->
 		<div>
-			<label class="mb-1 block text-sm font-medium">RPC URL</label>
+			<Text variant="label" as="label" class="mb-1 block">RPC URL</Text>
 			<input
 				type="url"
 				bind:value={simpleFormData.rpcUrl}
@@ -372,7 +374,7 @@
 
 	<!-- Block Explorer (共用) -->
 	<div>
-		<label class="mb-1 block text-sm font-medium">Block Explorer</label>
+		<Text variant="label" as="label" class="mb-1 block">Block Explorer</Text>
 		{#if enableRpcLoadBalancing}
 			<input
 				type="url"

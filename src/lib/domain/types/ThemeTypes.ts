@@ -6,18 +6,32 @@ export interface WalletKitTheme {
 	colors: {
 		// 主色调
 		primary: string;
+		primaryDark?: string;
+		primaryLight?: string;
 		primaryHover: string;
 		primaryActive: string;
+
+		// 辅助色
+		secondary?: string;
+		secondaryDark?: string;
+		secondaryLight?: string;
+
+		// 强调色
+		accent?: string;
 
 		// 语义颜色
 		success: string;
 		successLight: string;
+		successDark?: string;
 		error: string;
 		errorLight: string;
+		errorDark?: string;
 		warning: string;
 		warningLight: string;
+		warningDark?: string;
 		info: string;
 		infoLight: string;
+		infoDark?: string;
 
 		// 背景色
 		background: string;
@@ -35,6 +49,7 @@ export interface WalletKitTheme {
 		border: string;
 		borderLight: string;
 		borderFocus: string;
+		borderHover?: string;
 
 		// 特殊用途
 		modalBackground: string;
@@ -77,6 +92,7 @@ export interface WalletKitTheme {
 
 	// 间距
 	spacing: {
+		[key: string]: string;
 		xs: string;
 		sm: string;
 		md: string;
@@ -99,11 +115,29 @@ export interface WalletKitTheme {
 		xl: string;
 	};
 
+	// 字体粗细
+	fontWeights?: {
+		normal?: string;
+		medium?: string;
+		semibold?: string;
+		bold?: string;
+	};
+
 	// 过渡动画
 	transitions: {
 		fast: string;
+		normal?: string;
 		base: string;
 		slow: string;
+	};
+
+	// 渐变
+	gradients?: {
+		primary?: string;
+		secondary?: string;
+		surface?: string;
+		accent?: string;
+		overlay?: string;
 	};
 
 	// z-index 层级
