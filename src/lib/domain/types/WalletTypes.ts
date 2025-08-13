@@ -63,3 +63,40 @@ export interface TransactionRequest {
 	maxPriorityFeePerGas?: string;
 	nonce?: number;
 }
+
+/**
+ * 钱包账户信息
+ */
+export interface WalletAccount {
+	address: string;
+	chainId: number;
+	isConnected: boolean;
+}
+
+/**
+ * 钱包配置
+ */
+export interface WalletConfig {
+	provider: WalletProvider;
+	autoConnect?: boolean;
+	chainId?: number;
+	rpcUrl?: string;
+}
+
+/**
+ * 连接器接口
+ */
+export interface Connector {
+	id: string;
+	name: string;
+	icon?: string;
+	ready: boolean;
+	connect(): Promise<WalletAccount>;
+	disconnect(): Promise<void>;
+	getAccount(): Promise<WalletAccount | null>;
+	switchChain(chainId: number): Promise<void>;
+	watchAsset?(asset: any): Promise<void>;
+	onAccountsChanged?(callback: (accounts: string[]) => void): void;
+	onChainChanged?(callback: (chainId: number) => void): void;
+	onDisconnect?(callback: () => void): void;
+}

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Loader2 } from '@lucide/svelte';
+	import { Loader } from '@lucide/svelte';
 
 	interface Props {
 		variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
@@ -32,7 +32,7 @@
 	class="wk-button wk-button-{variant} wk-button-{size} {className}"
 >
 	{#if loading}
-		<Loader2 class="wk-button-icon animate-spin" />
+		<Loader class="wk-button-icon animate-spin" />
 	{:else if icon}
 		<svelte:component this={icon} class="wk-button-icon" />
 	{/if}

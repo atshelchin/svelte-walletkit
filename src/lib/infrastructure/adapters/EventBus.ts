@@ -19,7 +19,7 @@ export class EventBus implements IEventBus {
 		const promises = Array.from(handlers).map((handler) => {
 			try {
 				return Promise.resolve(handler(event));
-			} catch {
+			} catch (error) {
 				console.error(`Error in event handler for ${event.type}:`, error);
 				return Promise.resolve();
 			}

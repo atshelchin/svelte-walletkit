@@ -5,13 +5,13 @@
 	import Text from '$lib/presentation/components/shared/Text.svelte';
 	import {
 		Check,
-		Loader2,
-		AlertCircle,
+		Loader,
+		TriangleAlert,
 		Plus,
 		Trash2,
 		Clock,
-		CheckCircle,
-		XCircle,
+		CircleCheck,
+		CircleX,
 		Circle
 	} from '@lucide/svelte';
 
@@ -73,7 +73,7 @@
 					isValidating: false
 				}
 			};
-		} catch {
+		} catch (error) {
 			rpcValidationResults = {
 				...rpcValidationResults,
 				[simpleFormData.rpcUrl]: {
@@ -110,7 +110,7 @@
 					isValidating: false
 				}
 			};
-		} catch {
+		} catch (error) {
 			rpcValidationResults = {
 				...rpcValidationResults,
 				[url]: {
@@ -251,7 +251,7 @@
 			const skipFullValidation = !enableRpcLoadBalancing;
 			await networkStore.updateNetwork(network.chainId, updates, skipFullValidation);
 			onClose();
-		} catch {
+		} catch (error) {
 			console.error('Failed to save network:', error);
 		} finally {
 			isSaving = false;
@@ -290,7 +290,7 @@
 								title={balancingFormData.defaultRpcUrl === url ? 'Default RPC' : 'Set as default'}
 							>
 								{#if balancingFormData.defaultRpcUrl === url}
-									<CheckCircle class="h-4 w-4" />
+									<CircleCheck class="h-4 w-4" />
 								{:else}
 									<Circle class="h-4 w-4" />
 								{/if}
@@ -308,7 +308,7 @@
 							<div class="ml-2 text-xs">
 								{#if validation.isValidating}
 									<div class="flex items-center gap-1 text-gray-500">
-										<Loader2 class="h-3 w-3 animate-spin" />
+										<Loader class="h-3 w-3 animate-spin" />
 										Validating...
 									</div>
 								{:else if validation.valid}
@@ -318,7 +318,7 @@
 									</div>
 								{:else}
 									<div class="flex items-center gap-1 text-red-600 dark:text-red-400">
-										<XCircle class="h-3 w-3" />
+										<CircleX class="h-3 w-3" />
 										<span>{validation.error || 'Connection failed'}</span>
 									</div>
 								{/if}
@@ -353,7 +353,7 @@
 				<div class="mt-2 text-sm">
 					{#if validation?.isValidating}
 						<div class="flex items-center gap-2 text-gray-500">
-							<Loader2 class="h-4 w-4 animate-spin" />
+							<Loader class="h-4 w-4 animate-spin" />
 							Validating...
 						</div>
 					{:else if validation?.valid}
@@ -363,7 +363,7 @@
 						</div>
 					{:else}
 						<div class="flex items-center gap-2 text-red-600 dark:text-red-400">
-							<AlertCircle class="h-4 w-4" />
+							<TriangleAlert class="h-4 w-4" />
 							<span>{validation?.error}</span>
 						</div>
 					{/if}
@@ -402,7 +402,7 @@
 					</div>
 				{:else}
 					<div class="flex items-center gap-2 text-red-600 dark:text-red-400">
-						<AlertCircle class="h-4 w-4" />
+						<TriangleAlert class="h-4 w-4" />
 						<span>{explorerValidation.error}</span>
 					</div>
 				{/if}
@@ -417,7 +417,7 @@
 			class="flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
 		>
 			{#if isSaving}
-				<Loader2 class="h-4 w-4 animate-spin" />
+				<Loader class="h-4 w-4 animate-spin" />
 				Saving...
 			{:else}
 				<Check class="h-4 w-4" />

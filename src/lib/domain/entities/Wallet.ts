@@ -1,6 +1,6 @@
-import type { Address } from '../value-objects/Address';
-import type { ChainId } from '../value-objects/ChainId';
-import type { WalletProvider } from '../types/WalletTypes';
+import type { Address } from '../value-objects/Address.js';
+import type { ChainId } from '../value-objects/ChainId.js';
+import type { WalletProvider } from '../types/WalletTypes.js';
 
 /**
  * Wallet Entity - 钱包实体

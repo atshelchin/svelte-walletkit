@@ -175,7 +175,7 @@
 						customTheme = { ...customTheme, ...config.theme };
 						applyTheme();
 					}
-				} catch {
+				} catch (error) {
 					console.error('Failed to import theme:', error);
 				}
 			};

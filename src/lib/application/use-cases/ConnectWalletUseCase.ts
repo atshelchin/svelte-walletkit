@@ -39,13 +39,13 @@ export class ConnectWalletUseCase {
 			}
 
 			// 5. 发布领域事件
-			await this.eventBus.publish(new WalletConnectedEvent(wallet));
+			await this.eventBus.publish(new WalletConnectedEvent({ wallet }));
 
 			// 6. 设置事件监听
 			this.setupEventListeners();
 
 			return wallet;
-		} catch {
+		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 			throw new Error(`Failed to connect wallet: ${errorMessage}`);
 		}

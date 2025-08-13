@@ -11,13 +11,15 @@
 		Trash2,
 		Save,
 		RefreshCw,
-		XCircle,
+		CircleX,
 		Circle,
-		CheckCircle,
+		CircleCheck,
 		Network,
 		Server,
 		Coins,
-		Search
+		Search,
+		Loader,
+		TriangleAlert
 	} from '@lucide/svelte';
 
 	interface Props {
@@ -172,7 +174,7 @@
 				delete errors[`rpc_${url}`];
 				validationErrors = errors;
 			}
-		} catch {
+		} catch (error) {
 			rpcValidationStates = {
 				...rpcValidationStates,
 				[url]: {
@@ -285,7 +287,7 @@
 			}
 
 			cancelEdit();
-		} catch {
+		} catch (error) {
 			validationErrors = {
 				save: error instanceof Error ? error.message : 'Failed to save network'
 			};
@@ -307,7 +309,7 @@
 		) {
 			try {
 				networkStore.removeNetwork(network.chainId);
-			} catch {
+			} catch (error) {
 				alert(error instanceof Error ? error.message : 'Failed to delete network');
 			}
 		}
@@ -444,7 +446,7 @@
 									title={formData.defaultRpcUrl === url ? 'Default RPC' : 'Set as default'}
 								>
 									{#if formData.defaultRpcUrl === url}
-										<CheckCircle class="h-4 w-4" />
+										<CircleCheck class="h-4 w-4" />
 									{:else}
 										<Circle class="h-4 w-4" />
 									{/if}
@@ -466,19 +468,19 @@
 										: 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300'}"
 								>
 									{#if validationState.isValidating}
-										<Loader2 class="h-3 w-3 animate-spin" />
+										<Loader class="h-3 w-3 animate-spin" />
 										<span>Checking...</span>
 									{:else if validationState.result}
 										{#if validationState.result.valid}
-											<CheckCircle class="h-3 w-3" />
+											<CircleCheck class="h-3 w-3" />
 											<span>{validationState.result.latency}ms</span>
 										{:else if validationState.result.error?.includes('ChainId mismatch')}
-											<XCircle class="h-3 w-3" />
+											<CircleX class="h-3 w-3" />
 											<span
 												>Chain ID mismatch: got {validationState.result.chainId}, expected {formData.chainId}</span
 											>
 										{:else}
-											<XCircle class="h-3 w-3" />
+											<CircleX class="h-3 w-3" />
 											<span>Connection failed</span>
 										{/if}
 									{/if}
@@ -598,7 +600,7 @@
 									: 'Set as default'}
 							>
 								{#if formData.defaultBlockExplorer === url}
-									<CheckCircle class="h-4 w-4" />
+									<CircleCheck class="h-4 w-4" />
 								{:else}
 									<Circle class="h-4 w-4" />
 								{/if}
@@ -633,7 +635,7 @@
 					<div
 						class="flex items-center gap-2 rounded-lg bg-slate-100 p-3 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
 					>
-						<AlertCircle class="h-4 w-4" />
+						<TriangleAlert class="h-4 w-4" />
 						<p class="text-sm">{validationErrors.save}</p>
 					</div>
 				{/if}
@@ -646,7 +648,7 @@
 						class="flex items-center gap-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-2.5 font-medium text-white shadow-sm transition-all hover:from-indigo-600 hover:to-purple-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						{#if isValidating || isSaving}
-							<Loader2 class="h-4 w-4 animate-spin" />
+							<Loader class="h-4 w-4 animate-spin" />
 							{isValidating ? 'Validating...' : 'Saving...'}
 						{:else}
 							<Save class="h-4 w-4" />

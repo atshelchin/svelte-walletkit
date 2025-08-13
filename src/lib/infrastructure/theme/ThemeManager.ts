@@ -3,7 +3,7 @@ import type {
 	ThemeMode,
 	PresetTheme,
 	ThemeConfig
-} from '$lib/domain/types/ThemeTypes';
+} from '$lib/domain/types/ThemeTypes.js';
 
 /**
  * 默认主题（适应性设计，能融入大部分应用）
@@ -379,23 +379,23 @@ export class ThemeManager {
 
 		// 设置 CSS 变量
 		Object.entries(theme.colors).forEach(([key, value]) => {
-			root.style.setProperty(`--wk-color-${this.kebabCase(key)}`, value);
+			root.style.setProperty(`--wk-color-${this.kebabCase(key)}`, String(value));
 		});
 
 		Object.entries(theme.radius).forEach(([key, value]) => {
-			root.style.setProperty(`--wk-radius-${this.kebabCase(key)}`, value);
+			root.style.setProperty(`--wk-radius-${this.kebabCase(key)}`, String(value));
 		});
 
 		Object.entries(theme.shadows).forEach(([key, value]) => {
-			root.style.setProperty(`--wk-shadow-${this.kebabCase(key)}`, value);
+			root.style.setProperty(`--wk-shadow-${this.kebabCase(key)}`, String(value));
 		});
 
 		Object.entries(theme.spacing).forEach(([key, value]) => {
-			root.style.setProperty(`--wk-spacing-${key}`, value);
+			root.style.setProperty(`--wk-spacing-${key}`, String(value));
 		});
 
 		Object.entries(theme.fonts).forEach(([key, value]) => {
-			root.style.setProperty(`--wk-font-${this.kebabCase(key)}`, value);
+			root.style.setProperty(`--wk-font-${this.kebabCase(key)}`, String(value));
 		});
 
 		Object.entries(theme.fontSizes).forEach(([key, value]) => {
@@ -420,7 +420,7 @@ export class ThemeManager {
 
 		// z-index 作为 CSS 变量
 		Object.entries(theme.zIndex).forEach(([key, value]) => {
-			root.style.setProperty(`--wk-z-${this.kebabCase(key)}`, value.toString());
+			root.style.setProperty(`--wk-z-${this.kebabCase(key)}`, String(value));
 		});
 	}
 

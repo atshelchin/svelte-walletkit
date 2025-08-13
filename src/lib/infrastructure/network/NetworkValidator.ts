@@ -1,4 +1,4 @@
-import type { NetworkConfig } from '$lib/domain/types/WalletTypes';
+import type { NetworkConfig } from '$lib/domain/types/WalletTypes.js';
 import { createPublicClient, http } from 'viem';
 
 export class NetworkValidator {
@@ -187,7 +187,7 @@ export class NetworkValidator {
 			}
 
 			// 验证其他 RPC URLs
-			const otherRpcUrls = config.rpcUrls.filter((url) => url !== config.defaultRpcUrl);
+			const otherRpcUrls = config.rpcUrls.filter((url: string) => url !== config.defaultRpcUrl);
 			if (otherRpcUrls.length > 0) {
 				const { invalidUrls } = await this.validateRpcUrls(otherRpcUrls, config.chainId);
 				invalidUrls.forEach(({ url, error }) => {

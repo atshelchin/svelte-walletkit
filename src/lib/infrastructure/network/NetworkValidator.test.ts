@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { NetworkValidator } from './NetworkValidator';
-import type { NetworkConfig } from '$lib/domain/types/WalletTypes';
+import { NetworkValidator } from './NetworkValidator.js';
+import type { NetworkConfig } from '$lib/domain/types/WalletTypes.js';
 import * as viem from 'viem';
 
 // Mock viem
@@ -22,7 +22,7 @@ describe('NetworkValidator', () => {
 			};
 
 			vi.mocked(viem.createPublicClient).mockReturnValue(
-				mockClient as ReturnType<typeof viem.createPublicClient>
+				mockClient as unknown as ReturnType<typeof viem.createPublicClient>
 			);
 
 			const result = await NetworkValidator.validateRpcUrl('https://eth.llamarpc.com');
@@ -39,7 +39,7 @@ describe('NetworkValidator', () => {
 			};
 
 			vi.mocked(viem.createPublicClient).mockReturnValue(
-				mockClient as ReturnType<typeof viem.createPublicClient>
+				mockClient as unknown as ReturnType<typeof viem.createPublicClient>
 			);
 
 			const result = await NetworkValidator.validateRpcUrl('https://polygon-rpc.com', 1);
@@ -55,7 +55,7 @@ describe('NetworkValidator', () => {
 			};
 
 			vi.mocked(viem.createPublicClient).mockReturnValue(
-				mockClient as ReturnType<typeof viem.createPublicClient>
+				mockClient as unknown as ReturnType<typeof viem.createPublicClient>
 			);
 
 			const result = await NetworkValidator.validateRpcUrl('https://invalid-rpc.com');
@@ -73,7 +73,7 @@ describe('NetworkValidator', () => {
 			};
 
 			vi.mocked(viem.createPublicClient).mockReturnValue(
-				mockClient as ReturnType<typeof viem.createPublicClient>
+				mockClient as unknown as ReturnType<typeof viem.createPublicClient>
 			);
 
 			const urls = ['https://eth.llamarpc.com', 'https://rpc.ankr.com/eth', 'https://invalid.com'];
@@ -137,7 +137,7 @@ describe('NetworkValidator', () => {
 			};
 
 			vi.mocked(viem.createPublicClient).mockReturnValue(
-				mockClient as ReturnType<typeof viem.createPublicClient>
+				mockClient as unknown as ReturnType<typeof viem.createPublicClient>
 			);
 
 			const result = await NetworkValidator.validateNetworkConfig(validConfig);
@@ -241,7 +241,7 @@ describe('NetworkValidator', () => {
 			};
 
 			vi.mocked(viem.createPublicClient).mockReturnValue(
-				mockClient as ReturnType<typeof viem.createPublicClient>
+				mockClient as unknown as ReturnType<typeof viem.createPublicClient>
 			);
 
 			const newConfig = {

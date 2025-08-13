@@ -60,8 +60,8 @@
 	let sortOrder = $state<'asc' | 'desc'>('asc');
 
 	// 反馈状态
-	// let saveSuccess = $state(false);
-	// let saveMessage = $state('');
+	let saveSuccess = $state(false);
+	let saveMessage = $state('');
 	let showSuccessToast = $state(false);
 	let toastMessage = $state('');
 	let toastType = $state<'success' | 'error' | 'info'>('success');
@@ -309,7 +309,7 @@
 				delete errors[`rpc_${url}`];
 				validationErrors = errors;
 			}
-		} catch {
+		} catch (error) {
 			rpcValidationStates = {
 				...rpcValidationStates,
 				[url]: {
@@ -446,7 +446,7 @@
 			setTimeout(() => {
 				cancelEdit();
 			}, 1200);
-		} catch {
+		} catch (error) {
 			saveError = error instanceof Error ? error.message : 'Failed to save network';
 			saveStatus = 'error';
 			isSaving = false;
@@ -478,7 +478,7 @@
 			try {
 				networkStore.removeNetwork(network.chainId);
 				showToast(`🗑️ ${network.name} deleted successfully`, 'success');
-			} catch {
+			} catch (error) {
 				showToast(error instanceof Error ? error.message : 'Failed to delete network', 'error');
 			}
 		}
