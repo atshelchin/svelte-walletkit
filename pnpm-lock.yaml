@@ -12,8 +12,8 @@ importers:
         specifier: ^0.539.0
         version: 0.539.0(svelte@5.37.3)
       '@shelchin/svelte-i18n':
-        specifier: ^0.0.17
-        version: 0.0.17(svelte@5.37.3)
+        specifier: ^0.0.37
+        version: 0.0.37(svelte@5.37.3)
       viem:
         specifier: ^2.33.3
         version: 2.33.3(typescript@5.9.2)
@@ -529,8 +529,8 @@ packages:
   '@scure/bip39@1.6.0':
     resolution: {integrity: sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A==}
 
-  '@shelchin/svelte-i18n@0.0.17':
-    resolution: {integrity: sha512-xQTmagXi3UA75iAjaTOTJYx+uvUZkl/8WjW87Xtcs/qOifoBCVX5RT7qivmi4ZvGissCj+A0H97Wjo/zQHOtCw==}
+  '@shelchin/svelte-i18n@0.0.37':
+    resolution: {integrity: sha512-NcIf/erQfxywXEQclPl2mUdSicbw95IaPAP1DqJ+XgpAXjW+UwQs3zmVs/vcb0jz5tAKsnMrJVCnBK9oV5mAcw==}
     hasBin: true
     peerDependencies:
       svelte: ^5.0.0
@@ -2203,7 +2203,7 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
-  '@shelchin/svelte-i18n@0.0.17(svelte@5.37.3)':
+  '@shelchin/svelte-i18n@0.0.37(svelte@5.37.3)':
     dependencies:
       svelte: 5.37.3
 
