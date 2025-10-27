@@ -106,6 +106,6 @@
 	"dependencies": {
 		"@lucide/svelte": "^0.539.0",
 		"@shelchin/svelte-i18n": "^0.0.17",
-		"viem": "^2.33.3"
+		"viem": "^2.38.4"
 	}
 }
